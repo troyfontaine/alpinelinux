@@ -65,6 +65,7 @@ build_arm() {
 
 build_arm_release() {
     cp resources/shadow ./arch/armhf_release/
+    cp -r ./qemu ./arch/armhf_release/
 	declare arm_build_files="${*:-arch/armhf_release/**/options}"
 
 	for file in $arm_build_files; do
@@ -86,6 +87,7 @@ build_arm_release() {
 		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_release/
         )
 	done
+    rm -rf ./arch/armhf_release/qemu
     rm ./arch/armhf_release/shadow
 }
 

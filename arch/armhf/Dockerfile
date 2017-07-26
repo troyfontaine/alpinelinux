@@ -1,8 +1,17 @@
 FROM scratch as builder
+
+ENV QEMU_EXECVE 1
 ARG ALPINE_DOWNLOAD
+
 ADD $ALPINE_DOWNLOAD /
 
+COPY qemu/  /usr/bin/
+
+RUN [ "/usr/bin/qemu-arm-static", "/bin/sh", "-c", "mv /bin/sh /bin/sh.real; ln -s /bin/sh.real /bin/sh" ]
+
 RUN apk --update add tzdata
+
+ENTRYPOINT [ "/usr/bin/qemu-arm-static", "/usr/bin/env", "QEMU_EXECVE=1" ]
 
 FROM scratch
 
