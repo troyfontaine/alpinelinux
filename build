@@ -97,10 +97,10 @@ run_tests() {
 }
 
 x86_64_tests() {
-	declare build_files="${*:-x86_64/**/options}"
+	declare build_files="${*:-arch/x86_64/**/options}"
 	declare -a test_files
 	for file in $build_files; do
-		# shellcheck source=x86_64/stock-XX/options
+		# shellcheck source=arch/x86_64/stock-XX/options
 		source "$file"
 		local tag
 		tag="${TAGS[0]}" tag="${tag//:/-}" tag="${tag//\//_}"
@@ -110,33 +110,16 @@ x86_64_tests() {
 }
 
 armhf_tests() {
-	declare build_files="${*:-armhf/**/options}"
+	declare build_files="${*:-arch/armhf/**/options}"
 	declare -a test_files
 	for file in $build_files; do
-		# shellcheck source=armhf/stock-XX/options
+		# shellcheck source=arch/armhf/stock-XX/options
 		source "$file"
 		local tag
 		tag="${TAGS[0]}" tag="${tag//:/-}" tag="${tag//\//_}"
 		test_files+=("test/test_${tag}.bats")
 	done
 	bats "${test_files[@]}"
-}
-
-push() {
-	[[ "$CIRCLE_BRANCH" == "release" ]] || return 0
-	[[ "$NO_PUSH" ]] && return 0
-
-	declare build_files="${*:-versions/**/options}"
-	for file in $build_files; do
-		( #shellcheck source=versions/stock-3.3/options
-		source "$file"
-		for tag in "${TAGS[@]}"; do
-			if docker history "$tag" &> /dev/null; then
-				[[ "$PUSH_IMAGE" ]] && docker push "$tag"
-			fi
-		done
-		exit 0 )
-	done
 }
 
 main() {
@@ -146,7 +129,6 @@ main() {
 		test)	shift;	run_tests "$@";;
         test_amd64) shift; x86_64_tests "$@";;
         test_arm)   shift; armhf_tests "$@";;
-		push)	shift;	push "$@";;
         build_arm)  build_arm;;
         release)  build_release;;
         build_amd64)   build_amd64;;
