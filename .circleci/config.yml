@@ -1,0 +1,83 @@
+version: 2
+jobs:
+  build:
+    machine:
+      image: circleci/classic:edge
+
+    parallelism: 2
+    branches:
+      ignore:
+
+    steps:
+      - checkout
+
+      - run: |
+          if [[ ! -e ~/deps/bats_v0.4.0.tar.gz ]]; then mkdir -p ~/deps; \
+          curl -sSL -o ~/deps/bats_v0.4.0.tar.gz \
+          https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz; fi && \
+          tar -xf ~/deps/bats_v0.4.0.tar.gz && sudo bats-0.4.0/install.sh \
+          /usr/local
+
+      - run: |
+          if [[ ! -e ~/deps/manifest-tool-linux-amd64 ]]; then mkdir -p ~/deps; \
+          curl -sSL -o ~/deps/manifest-tool-linux-amd64 \
+          https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64; fi && \
+          chmod +x ~/deps/manifest-tool-linux-amd64  && sudo cp ~/deps/manifest-tool-linux-amd64 /usr/bin/manifest-tool
+
+      - run:
+          name: Run build script
+          command: ./build
+
+      - run:
+          name: Run tests
+          command: ./build test
+          environment:
+            - files: "versions/**/options"
+
+      # Create release images and push them to Dockerhub
+      - deploy:
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "release" ];
+              then
+                ./build release
+                docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
+                docker push troyfontaine/armhf-alpinelinux
+                docker push troyfontaine/armhf_min-alpinelinux
+                docker push troyfontaine/x86_64-alpinelinux
+                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
+                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
+                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
+            fi
+
+#      - run:
+#          name: Build Release images
+#          command: ./build release
+#          when:
+
+#      - run:
+#          name: Login to Docker Hub
+#          command: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
+
+#      - run:
+#          name: Push ARMHF with QEMU images to Dockerhub
+#          command: docker push troyfontaine/armhf-alpinelinux
+
+#      - run:
+#          name: Push ARM Multi-architecture compatible images to Dockerhub
+#          command: docker push troyfontaine/armhf_min-alpinelinux
+
+#      - run:
+#          name: Push x86_64 images to Dockerhub
+#          command: docker push troyfontaine/x86_64-alpinelinux
+
+#      - run:
+#          name: Create multi-architecture image of 3.6
+#          command: manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
+
+#      - run:
+#          name: Create multi-architecture image of 3.6
+#          command: manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
+
+#      - run:
+#          name: Create multi-architecture image of Edge
+#          command: manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
