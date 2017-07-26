@@ -29,10 +29,10 @@ A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu
 
 This is intended to automatically build using CircleCI on a daily basis via triggered CRON job.
 
-[multi-arch](https://hub.docker.com/r/troyfontaine/alpinelinux/)
-[ARMHF with QEMU](https://hub.docker.com/r/troyfontaine/armhf-alpinelinux/)
-[ARMHF](https://hub.docker.com/r/troyfontaine/armhf_min-alpinelinux/)
-[x86_64](https://hub.docker.com/r/troyfontaine/x86_64-alpinelinux/)
+[multi-arch](https://hub.docker.com/r/troyfontaine/alpinelinux/)  
+[ARMHF with QEMU](https://hub.docker.com/r/troyfontaine/armhf-alpinelinux/)  
+[ARMHF](https://hub.docker.com/r/troyfontaine/armhf_min-alpinelinux/)  
+[x86_64](https://hub.docker.com/r/troyfontaine/x86_64-alpinelinux/)  
 
 ## Why?
 
