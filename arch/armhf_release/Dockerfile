@@ -9,9 +9,11 @@ COPY qemu/  /usr/bin/
 
 RUN [ "/usr/bin/qemu-arm-static", "/bin/sh", "-c", "mv /bin/sh /bin/sh.real; ln -s /bin/sh.real /bin/sh" ]
 
+RUN [ "cross-build-start" ]
+
 RUN apk --update add tzdata
 
-ENTRYPOINT [ "/usr/bin/qemu-arm-static", "/usr/bin/env", "QEMU_EXECVE=1" ]
+RUN [ "cross-build-end" ]
 
 FROM scratch
 
