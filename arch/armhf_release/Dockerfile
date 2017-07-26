@@ -1,3 +1,9 @@
+FROM scratch as builder
+ARG ALPINE_DOWNLOAD
+ADD $ALPINE_DOWNLOAD /
+
+RUN apk --update add tzdata
+
 FROM scratch
 
 ARG ALPINE_DOWNLOAD
@@ -9,11 +15,12 @@ ARG VERSION
 LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.docker.dockerfile="/Dockerfile" \
     org.label-schema.license="BSD" \
-    org.label-schema.name="armhf-alpinelinux" \
-    org.label-schema.url="https://armhf-alpinelinux.troyfontaine.com" \
+    org.label-schema.name="armhf_min-alpinelinux" \
+    org.label-schema.description="Minimal ARMHF Alpine Linux image" \
+    org.label-schema.url="https://alpinelinux.troyfontaine.com" \
     org.label-schema.vcs-ref=$VCS_REF \
     org.label-schema.vcs-type="Git" \
-    org.label-schema.vcs-url="https://github.com/troyfontaine/armhf-alpinelinux" \
+    org.label-schema.vcs-url="https://github.com/troyfontaine/alpinelinux" \
     org.label-schema.docker.cmd="docker run --rm troyfontaine/armhf_min-alpinelinux:$ALPINE_VERSION [args]" \
     org.label-schema.version=$VERSION \
     org.label-schema.schema-version="1.0" \
@@ -23,7 +30,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
 
 ADD $ALPINE_DOWNLOAD /
 
-COPY localtime /etc/localtime
+COPY --from=builder /usr/share/zoneinfo/UTC /etc/localtime
 
 COPY shadow /etc/shadow
 

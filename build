@@ -10,11 +10,11 @@ build_release() {
 }
 
 build_amd64() {
-    cp resources/shadow ./x86_64/
-	declare build_files="${*:-x86_64/**/options}"
+    cp resources/shadow ./arch/x86_64/
+	declare build_files="${*:-arch/x86_64/**/options}"
 
 	for file in $build_files; do
-        ( # shellcheck source=x86_64/stock-VV/options
+        ( # shellcheck source=arch/x86_64/stock-VV/options
 		source "$file"
 		local version_dir
 		version_dir="$(dirname "$file")"
@@ -29,20 +29,19 @@ build_amd64() {
         --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` x86_64/
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/x86_64/
         )
 	done
-    rm ./x86_64/shadow
+    rm ./arch/x86_64/shadow
 }
 
 build_arm() {
-    cp resources/localtime ./armhf/
-    cp resources/shadow ./armhf/
-    cp -r ./qemu ./armhf/
-	declare arm_build_files="${*:-armhf/**/options}"
+    cp resources/shadow ./arch/armhf/
+    cp -r ./qemu ./arch/armhf/
+	declare arm_build_files="${*:-arch/armhf/**/options}"
 
 	for file in $arm_build_files; do
-        ( # shellcheck source=armhf/stock-VV/options
+        ( # shellcheck source=arch/armhf/stock-VV/options
 		source "$file"
 		local version_dir
 		version_dir="$(dirname "$file")"
@@ -57,18 +56,16 @@ build_arm() {
         --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` armhf/
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf/
         )
 	done
-    rm -rf ./armhf/qemu
-    rm ./armhf/localtime
-    rm ./armhf/shadow
+    rm -rf ./arch/armhf/qemu
+    rm ./arch/armhf/shadow
 }
 
 build_arm_release() {
-    cp resources/localtime ./armhf_release/
-    cp resources/shadow ./armhf_release/
-	declare arm_build_files="${*:-armhf_release/**/options}"
+    cp resources/shadow ./arch/armhf_release/
+	declare arm_build_files="${*:-arch/armhf_release/**/options}"
 
 	for file in $arm_build_files; do
         ( # shellcheck source=armhf_release/stock-VV/options
@@ -86,11 +83,10 @@ build_arm_release() {
         --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` armhf_release/
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_release/
         )
 	done
-    rm ./armhf_release/localtime
-    rm ./armhf_release/shadow
+    rm ./arch/armhf_release/shadow
 }
 
 run_tests() {

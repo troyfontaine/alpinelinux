@@ -1,20 +1,33 @@
-# armhf-alpinelinux
+# Alpine Linux (Dockerized)
 
-[![](https://imagelayers.io/badge/troyfontaine/armhf-alpinelinux:latest.svg)](https://imagelayers.io/?images=troyfontaine/armhf-alpinelinux:latest 'Get your own badge on imagelayers.io')
-[![CircleCI](https://img.shields.io/circleci/project/troyfontaine/armhf-alpinelinux/release.svg)](https://circleci.com/gh/troyfontaine/armhf-alpinelinux)
+Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=svg)](https://circleci.com/gh/troyfontaine/alpinelinux)  
+
+Multi-arch (latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/alpinelinux.svg)]()  
+ARMHF with QEMU (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/armhf-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/armhf-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf-alpinelinux "Get your own version badge on microbadger.com")
 [![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/armhf-alpinelinux.svg)]()
-[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf-alpinelinux.svg)]()  
+ARMHF(Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/armhf_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf_min-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/armhf_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf_min-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/armhf_min-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf_min-alpinelinux.svg)]()  
+x86_64 (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/x86_64-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/x86_64-alpinelinux.svg)]()
 
-## TODO
-- Consider removing QEMU support at the end of the automated building process before pushing to Dockerhub via CircleCI (overkill?)
-- Add x86_64 builds
-- Streamline testing
+A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu images are only 4 MB and have access to a package repository that is much more complete than other BusyBox based images.  The primary image is a multi-platform image for x86_64 and armhf which is created using the (manifest-tool)[https://github.com/estesp/manifest-tool] by (Phil Estes)[https://twitter.com/estesp].  Images are built using multi-stage Dockerfiles.  
 
-A super small Docker image based on [Alpine Linux][alpine]. The image is only 19 MB and has access to a package repository that is much more complete than other BusyBox based images.  Included in this version is a qemu binary that allows the container when created on an ARM device to run on an x86/x86_64
+## Builds
 
-## How to build for ARMHF?
-
-You can use this repo directly on a Raspberry Pi to create an ARMHF-compatible Alpine Image that can run on other platforms.
+This is intended to automatically build using CircleCI on a daily basis via triggered CRON job.
 
 ## Why?
 
