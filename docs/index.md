@@ -1,51 +1,107 @@
-# Alpine Linux Docker Image
+# Alpine Linux (Dockerized)
 
-[![CircleCI](https://img.shields.io/circleci/project/gliderlabs/docker-alpine/release.svg)](https://circleci.com/gh/gliderlabs/docker-alpine)
-[![Docker Stars](https://img.shields.io/docker/stars/gliderlabs/alpine.svg)][hub]
-[![Docker Pulls](https://img.shields.io/docker/pulls/gliderlabs/alpine.svg)][hub]
-[![Slack](http://glider-slackin.herokuapp.com/badge.svg)][slack]
-[![Image Size](https://img.shields.io/imagelayers/image-size/gliderlabs/alpine/latest.svg)](https://imagelayers.io/?images=gliderlabs/alpine:latest)
-[![Image Layers](https://img.shields.io/imagelayers/layers/gliderlabs/alpine/latest.svg)](https://imagelayers.io/?images=gliderlabs/alpine:latest)
+Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=svg)](https://circleci.com/gh/troyfontaine/alpinelinux)  
 
+Multi-arch (latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/alpinelinux.svg)]()  
+ARMHF with QEMU (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/armhf-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/armhf-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/armhf-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf-alpinelinux.svg)]()  
+ARMHF(Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/armhf_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf_min-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/armhf_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf_min-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/armhf_min-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf_min-alpinelinux.svg)]()  
+x86_64 (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/x86_64-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/x86_64-alpinelinux.svg)]()
 
-Welcome to the documentation for the Alpine Linux Docker Image. Here we explain a bit about the motivations behind this image, how you typically use it, the build process, and how to make great minimalist containers!
+A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu images are only 4 MB and have access to a package repository that is much more complete than other BusyBox based images.  The primary image is a multi-platform image for x86_64 and armhf which is created using the (manifest-tool)[https://github.com/estesp/manifest-tool] by (Phil Estes)[https://twitter.com/estesp].  Images are built using multi-stage Dockerfiles.  
 
-## About
+## Builds
 
-The heart of this image is [Alpine Linux][alpine]. The image is only 5 MB and has access to a package repository that is much more complete than other minimal base images. Learn more [about this image][about], musl libc, BusyBox, and why the Docker Alpine Linux image makes a great base for your Docker projects.
+This is intended to automatically build using CircleCI on a daily basis via triggered CRON job.
 
-## Official
+## Why?
 
-This image serves as the source for the [official Alpine Linux image in the Docker Library][library]. The build process for both official `alpine` and `gliderlabs/alpine` are the same. However, different build options are used for the official library images. Check out [the build page][build] for more information on differences.
+Docker images today are big. Usually much larger than they need to be. There are a lot of ways to make them smaller, but the Docker populace still jumps to the `ubuntu` base image for most projects. The size savings over `ubuntu` and other bases are huge:
 
-## Motivations
+```
+REPOSITORY          				TAG           IMAGE ID          VIRTUAL SIZE
+troyfontaine/armhf-alpinelinux   	latest        78ccb6f52e56      19 MB
+debian              				latest        4d6ce913b130      84.98 MB
+ubuntu              				latest        b39b81afc8ca      188.3 MB
+centos              				latest        8efe422e6104      210 MB
+```
 
-Docker images today are big. Usually much larger than they need to be. There are a lot of ways to make them smaller. But you need to start with a small base. There are great size savings to be had when compared to base images such as `ubuntu`, `centos`, and `debian`.
+There are images such as `progrium/busybox` which get us very close to a minimal container and package system. But these particular BusyBox builds piggyback on the OpenWRT package index which is often lacking and not tailored towards generic everyday applications. Alpine Linux has a much more complete and up to date [package index][alpine-packages]:
+
+```console
+$ docker run progrium/busybox opkg-install nodejs
+Unknown package 'nodejs'.
+Collected errors:
+* opkg_install_cmd: Cannot install package nodejs.
+
+$ docker run gliderlabs/alpine apk add --no-cache nodejs
+fetch http://alpine.gliderlabs.com/alpine/v3.3/main/x86_64/APKINDEX.tar.gz
+fetch http://alpine.gliderlabs.com/alpine/v3.3/community/x86_64/APKINDEX.tar.gz
+(1/4) Installing libgcc (5.3.0-r0)
+(2/4) Installing libstdc++ (5.3.0-r0)
+(3/4) Installing libuv (1.7.5-r0)
+(4/4) Installing nodejs (4.2.3-r0)
+Executing busybox-1.24.1-r7.trigger
+OK: 29 MiB in 15 packages
+```
+
+This makes Alpine Linux a great image base for utilities and even production applications. [Read more about Alpine Linux here][alpine-about] and you can see how their mantra fits in right at home with Docker images.
 
 ## Usage
 
-You use the `apk` command to manage packages. We don't ship the image with a package index (since that can go stale fairly quickly), so you need to add the `--update` flag to `apk` when installing. An example installing the `nginx` package would be `apk add --update nginx`. Check out [the usage page][usage] for more advanced usage and `Dockerfile` examples.
+Stop doing this:
 
-## Caveats
+```dockerfile
+FROM ubuntu-debootstrap:14.04
+RUN apt-get update -q \
+  && DEBIAN_FRONTEND=noninteractive apt-get install -qy mysql-client \
+  && apt-get clean \
+  && rm -rf /var/lib/apt
+ENTRYPOINT ["mysql"]
+```
+This took 19 seconds to build and yields a 164 MB image. Eww. Start doing this:
 
-The musl libc implementation may work a little different than you are used to. One example of this is with DNS. musl libc does not use `domain` or `search` in the `/etc/resolv.conf` file. It also queries name servers in parallel which can be problematic if your first name server has a different DNS view (such as service discovery through DNS). We have [a page dedicated to the caveats][caveats] you should be aware of.
+```dockerfile
+FROM troyfontaine/armhf-alpinelinux:3.6
+RUN apk add --no-cache mysql-client
+ENTRYPOINT ["mysql"]
+```
 
-## Build
+Only 3 seconds to build and results in a 36 MB image! Hooray!
 
-This image is built and tested in a continuous integration environment using the `build` script. We then push the resulting images directly to Docker Hub. Check out [the page on building and testing][build] the images for more information.
+## Documentation
+
+Check out the `docs` directory in this repository.
 
 ## Contacts
 
-We make reasonable efforts to support our work and are always happy to chat. Join us in [our Slack community][slack] or [submit a GitHub issue][issues] if you have a security or other general question about this Docker image. Please email [security](http://lists.alpinelinux.org/alpine-security/summary.html) or [user](http://lists.alpinelinux.org/alpine-user/summary.html) mailing lists if you have concerns specific to Alpine Linux.
+We make reasonable efforts to support our work and are always happy to chat.  Got a problem? [Submit a GitHub issue][issues] if you have a security or other general question about this Docker image. Please email [security](http://lists.alpinelinux.org/alpine-security/summary.html) or [user](http://lists.alpinelinux.org/alpine-user/summary.html) mailing lists if you have concerns specific to Alpine Linux.
+
+## Inspiration
 
 
-[about]: /docker-alpine/about
-[usage]: /docker-alpine/usage
-[build]: /docker-alpine/build
-[caveats]: /docker-alpine/caveats
-[slack]: http://glider-slackin.herokuapp.com/
-[issues]: https://github.com/gliderlabs/docker-alpine/issues
+
+## License
+
+The code in this repository, unless otherwise noted, is BSD licensed. See the `LICENSE` file in this repository.
+
+[alpine-packages]: http://pkgs.alpinelinux.org/
+[alpine-about]: https://www.alpinelinux.org/about/
+[issues]: https://github.com/troyfontaine/armhf-alpinelinux/issues
 [alpine]: http://alpinelinux.org/
-[library]: https://github.com/docker-library/official-images/blob/master/library/alpine
-[fastly]: https://www.fastly.com/
-[hub]: https://hub.docker.com/r/gliderlabs/alpine/
+[hub]: https://hub.docker.com/r/troyfontaine/armhf-alpinelinux/
