@@ -38,7 +38,7 @@ build() {
 	# mkbase
 	{
 		# shellcheck disable=SC2086
-		apk --root "$rootfs" --update-cache --keys-dir /etc/apk/keys \
+		apk --root "$rootfs" -v --update-cache --keys-dir /etc/apk/keys \
 			add --initdb ${packages[*]//,/ }
 		[[ "$ADD_BASELAYOUT" ]] && \
 			apk --root "$rootfs" --keys-dir /etc/apk/keys \
@@ -50,9 +50,8 @@ build() {
 			sed -ie 's/^root::/root:!:/' "$rootfs/etc/shadow"
 	} >&2
 
-	# save
-	tar -J -f rootfs.tar.xz --numeric-owner -C "$rootfs" -c .
-	#[[ "$STDOUT" ]] && cat rootfs.tar.xz
+	# Move root to readily available location
+	mv "$rootfs" /alpine/
 
 	return 0
 }

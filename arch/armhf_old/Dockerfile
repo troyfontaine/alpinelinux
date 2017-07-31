@@ -18,14 +18,13 @@ RUN [ "cross-build-start" ]
 
 RUN apk --update add bash tzdata xz
 
-RUN /rootbuilder.sh $BUILD_OPTIONS -r $ALPINE_VERSION -m $BUILD_MIRROR
+RUN /rootbuilder.sh $BUILD_OPTIONS
 
 RUN [ "cross-build-end" ]
 
 FROM scratch
 
 ENV QEMU_EXECVE 1
-
 ARG ALPINE_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
@@ -47,7 +46,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     com.troyfontaine.alpine-version=$ALPINE_VERSION \
     maintainer="Troy Fontaine"
 
-COPY --from=builder /rootfs.tar.xz /
+COPY --from=builder /alpine/ /
 
 # Modified version of qemu https://github.com/resin-io/qemu
 # Highly inspired from https://github.com/resin-io-projects/armv7hf-debian-qemu
