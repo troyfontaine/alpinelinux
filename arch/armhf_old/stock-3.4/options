@@ -1,4 +1,5 @@
-export RELEASE="edge"
+export RELEASE="3.4"
 export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/edge/releases/armhf/alpine-minirootfs-3.6.0-armhf.tar.gz'
-export TAGS=(troyfontaine/armhf-alpinelinux:edge)
-export PUSH_IMAGE="false"
+export MIRROR="http://alpine.gliderlabs.com/alpine"
+export BUILD_OPTIONS="-d -s -E -t UTC -r v$RELEASE -m $MIRROR"
+export TAGS=(troyfontaine/armhf-alpinelinux:3.4)

@@ -79,10 +79,12 @@ build_arm_old() {
             mytags="-t $tag $mytags"
 		done
 
+        echo "${RELEASE} ${BUILD_OPTIONS}"
+
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
         --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
-        --build-arg BUILD_OPTIONS=${BUILD_OPTIONS} \
+        --build-arg BUILD_OPTIONS="${BUILD_OPTIONS}" \
         --build-arg BUILD_MIRROR=${MIRROR} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
