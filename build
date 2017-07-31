@@ -63,38 +63,6 @@ build_arm() {
     rm ./arch/armhf/shadow
 }
 
-build_arm_old() {
-    cp resources/shadow ./arch/armhf_old/
-    cp -r ./qemu ./arch/armhf_old/
-	declare arm_build_files="${*:-arch/armhf_old/**/options}"
-
-	for file in $arm_build_files; do
-        ( # shellcheck source=arch/armhf_old/stock-VV/options
-		source "$file"
-		local version_dir
-		version_dir="$(dirname "$file")"
-		: "${TAGS:?}" "${RELEASE:?}" "${DOWNLOAD:?}" "${MIRROR}" "${BUILD_OPTIONS}"
-
-		for tag in "${TAGS[@]}"; do
-            mytags="-t $tag $mytags"
-		done
-
-        echo "${RELEASE} ${BUILD_OPTIONS}"
-
-		docker build $mytags \
-		--build-arg ALPINE_VERSION=${RELEASE} \
-        --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
-        --build-arg BUILD_OPTIONS="${BUILD_OPTIONS}" \
-        --build-arg BUILD_MIRROR=${MIRROR} \
-		--build-arg VCS_REF=`git rev-parse --short HEAD` \
-		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_old/
-        )
-	done
-    rm -rf ./arch/armhf_old/qemu
-    rm ./arch/armhf_old/shadow
-}
-
 build_arm_release() {
     cp resources/shadow ./arch/armhf_release/
     cp -r ./qemu ./arch/armhf_release/
@@ -162,7 +130,6 @@ main() {
         test_amd64) shift; x86_64_tests "$@";;
         test_arm)   shift; armhf_tests "$@";;
         build_arm)  build_arm;;
-        build_old)  build_arm_old;;
         release)  build_release;;
         build_amd64)   build_amd64;;
 		*)		build "$@";;
