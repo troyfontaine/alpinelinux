@@ -1,6 +1,6 @@
 # Alpine Linux (Dockerized)
 
-Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=svg)](https://circleci.com/gh/troyfontaine/alpinelinux)  
+Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=shield)](https://circleci.com/gh/troyfontaine/alpinelinux)  
 
 Multi-arch (latest):  
 [![](https://images.microbadger.com/badges/image/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own image badge on microbadger.com")
@@ -23,11 +23,16 @@ x86_64 (Latest):
 [![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/x86_64-alpinelinux.svg)]()
 [![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/x86_64-alpinelinux.svg)]()
 
-A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu images are only 4 MB and have access to a package repository that is much more complete than other BusyBox based images.  The primary image is a multi-platform image for x86_64 and armhf which is created using the (manifest-tool)[https://github.com/estesp/manifest-tool] by (Phil Estes)[https://twitter.com/estesp].  Images are built using multi-stage Dockerfiles.  
+A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu images are only 4 MB and have access to a package repository that is much more complete than other BusyBox based images.  The primary image is a multi-platform image for x86_64 and armhf which is created using the [manifest-tool](https://github.com/estesp/manifest-tool) by [Phil Estes](https://twitter.com/estesp).  Images are built using multi-stage Dockerfiles.  
 
 ## Builds
 
 This is intended to automatically build using CircleCI on a daily basis via triggered CRON job.
+
+[multi-arch](https://hub.docker.com/r/troyfontaine/alpinelinux/)  
+[ARMHF with QEMU](https://hub.docker.com/r/troyfontaine/armhf-alpinelinux/)  
+[ARMHF](https://hub.docker.com/r/troyfontaine/armhf_min-alpinelinux/)  
+[x86_64](https://hub.docker.com/r/troyfontaine/x86_64-alpinelinux/)  
 
 ## Why?
 
