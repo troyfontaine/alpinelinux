@@ -92,7 +92,7 @@ RUN apk add --no-cache mysql-client
 ENTRYPOINT ["mysql"]
 ```
 
-Only 3 seconds to build and results in a 36 MB image! Hooray!
+Only 3 seconds to build and results in a 36 MB image!  Hooray!
 
 ## Documentation
 
