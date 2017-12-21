@@ -1,18 +1,17 @@
 from scratch as builder
 ARG ALPINE_DOWNLOAD
-ADD $ALPINE_DOWNLOAD /
+ADD alpine.tgz /
 
 RUN apk --update add tzdata
 
 FROM scratch
 
-ARG ALPINE_DOWNLOAD
 ARG ALPINE_VERSION
 ARG BUILD_DATE
 ARG VCS_REF
 ARG VERSION
 
-ADD $ALPINE_DOWNLOAD /
+ADD alpine.tgz /
 
 LABEL org.label-schema.build-date=$BUILD_DATE \
     org.label-schema.docker.dockerfile="/Dockerfile" \

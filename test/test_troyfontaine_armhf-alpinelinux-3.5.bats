@@ -1,5 +1,5 @@
 setup() {
-  docker history troyfontaine/armhf-alpinelinux:3.5 >/dev/null 2>&1
+  docker history "troyfontaine/armhf-alpinelinux:3.5" >/dev/null 2>&1
 }
 
 @test "ARM 3.5 version is correct" {
