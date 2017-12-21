@@ -59,7 +59,7 @@ jobs:
           working_directory: deps/
           command: |
             tar -xf bats_v0.4.0.tar.gz -C deps/bats-0.4.0
-            sudo deps/bats-0.4.0/install.sh /usr/local
+            sudo bats-0.4.0/install.sh /usr/local
       - run:
           name: "Install manifest tool"
           working_directory: deps/
