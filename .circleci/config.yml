@@ -11,19 +11,21 @@ jobs:
       - run:
           name: "Download bats"
           command: |
-            if [[ ! -e ~/deps/bats_v0.4.0.tar.gz ]]; then
-              mkdir -p ~/deps
-              curl -sSL -o ~/deps/bats_v0.4.0.tar.gz
-              https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
+            if [[ ! -e ~/deps/bats_v0.4.0.tar.gz ]];
+              then
+                mkdir -p ~/deps
+                curl -sSL -o ~/deps/bats_v0.4.0.tar.gz \
+                https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
               tar -xf ~/deps/bats_v0.4.0.tar.gz
             fi
       - run:
           name: "Download Manifest Tool"
           command: |
-            if [[ ! -e ~/deps/manifest-tool-linux-amd64 ]]; then
-              mkdir -p ~/deps
-              curl -sSL -o ~/deps/manifest-tool-linux-amd64 \
-              https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
+            if [[ ! -e ~/deps/manifest-tool-linux-amd64 ]];
+              then
+                mkdir -p ~/deps
+                curl -sSL -o ~/deps/manifest-tool-linux-amd64 \
+                https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
             fi
             chmod +x ~/deps/manifest-tool-linux-amd64
 
