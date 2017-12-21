@@ -79,7 +79,7 @@ jobs:
       - run:
           name: "Save containers to file"
           command: |
-            docker image save -o built_images.tar $CIRCLE_PROJECT_REPONAME
+            docker image save -o built_images.tar troyfontaine/armhf_min-alpinelinux troyfontaine/armhf-alpinelinux troyfontaine/x86_64-alpinelinux
       - save_cache:
           key: container_image-{{ .Branch }}-{{ .Revision }}
           paths:
