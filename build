@@ -3,9 +3,6 @@
 build() {
     build_amd64
     build_arm
-}
-
-build_release() {
     build_arm_release
 }
 
@@ -146,7 +143,6 @@ main() {
         test_amd64) shift; x86_64_tests "$@";;
         test_arm)   shift; armhf_tests "$@";;
         build_arm)  build_arm;;
-        release)  build_release;;
         build_amd64)   build_amd64;;
 		*)		build "$@";;
 	esac
