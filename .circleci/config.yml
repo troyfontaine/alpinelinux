@@ -14,9 +14,9 @@ jobs:
             if [[ ! -e deps/bats_v0.4.0.tar.gz ]];
               then
                 mkdir -p deps
-                curl -sSL -o ~/deps/bats_v0.4.0.tar.gz \
+                curl -sSL -o deps/bats_v0.4.0.tar.gz \
                 https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
-                tar -xf ~/deps/bats_v0.4.0.tar.gz
+                tar -xf deps/bats_v0.4.0.tar.gz
             fi
       - run:
           name: "Download Manifest Tool"
