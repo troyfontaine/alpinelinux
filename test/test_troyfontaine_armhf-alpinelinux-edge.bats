@@ -5,7 +5,7 @@ setup() {
 @test "ARM Edge version is correct" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:edge cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.6.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
 }
 
 @test "ARM Edge package installs cleanly" {

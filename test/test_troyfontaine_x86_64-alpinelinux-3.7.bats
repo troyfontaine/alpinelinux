@@ -1,5 +1,5 @@
 setup() {
-  docker history troyfontaine/x86_64-alpinelinux:3.7 >/dev/null 2>&1
+  docker history "troyfontaine/x86_64-alpinelinux:3.7" >/dev/null 2>&1
 }
 
 @test "x86_64 3.7 version is correct" {
