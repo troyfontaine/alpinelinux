@@ -38,7 +38,8 @@ jobs:
             - test
       - save_cache:
           key: multi-{{ .Branch }}-{{ .Revision }}
-          paths: multi
+          paths:
+            - multi
       - save_cache:
           key: deps-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -89,7 +90,7 @@ jobs:
             - container_image-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
-            - project-{{ .Branch }}-{{ .Revision }}
+            - multi-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
             - deps-{{ .Branch }}-{{ .Revision }}
