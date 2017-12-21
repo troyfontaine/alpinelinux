@@ -1,6 +1,6 @@
 version: 2
 jobs:
-  checkout:
+  checkout_code:
     machine:
       image: circleci/classic:edge
     steps:
