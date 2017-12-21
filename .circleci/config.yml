@@ -1,50 +1,156 @@
 version: 2
 jobs:
-  build:
+  checkout_code:
     machine:
       image: circleci/classic:edge
-
-    parallelism: 2
-    branches:
-      ignore:
-
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - bats
+      - run:
+          name: "Download bats"
+          command: |
+            if [[ ! -e deps/bats_v0.4.0.tar.gz ]];
+              then
+                mkdir -p deps
+                curl -sSL -o deps/bats_v0.4.0.tar.gz \
+                https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
+                tar -xf deps/bats_v0.4.0.tar.gz
+            fi
+      - run:
+          name: "Download Manifest Tool"
+          command: |
+            if [[ ! -e deps/manifest-tool-linux-amd64 ]];
+              then
+                mkdir -p deps
+                curl -sSL -o deps/manifest-tool-linux-amd64 \
+                https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
+            fi
+            chmod +x deps/manifest-tool-linux-amd64
+      - save_cache:
+          key: project-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - build
+            - arch
+            - qemu
+            - resources
+            - test
+      - save_cache:
+          key: multi-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - multi
+      - save_cache:
+          key: deps-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - deps
 
-      - run: |
-          if [[ ! -e ~/deps/bats_v0.4.0.tar.gz ]]; then mkdir -p ~/deps; \
-          curl -sSL -o ~/deps/bats_v0.4.0.tar.gz \
-          https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz; fi && \
-          tar -xf ~/deps/bats_v0.4.0.tar.gz && sudo bats-0.4.0/install.sh \
-          /usr/local
-
-      - run: |
-          if [[ ! -e ~/deps/manifest-tool-linux-amd64 ]]; then mkdir -p ~/deps; \
-          curl -sSL -o ~/deps/manifest-tool-linux-amd64 \
-          https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64; fi && \
-          chmod +x ~/deps/manifest-tool-linux-amd64  && sudo cp ~/deps/manifest-tool-linux-amd64 /usr/bin/manifest-tool
-
+  build-and-test:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - restore_cache:
+          keys:
+            - project-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          keys:
+            - deps-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: "Install bats"
+          working_directory: deps/
+          command: |
+            tar -xf bats_v0.4.0.tar.gz
+            sudo bats-0.4.0/install.sh /usr/local
       - run:
           name: Run build script
           command: ./build
-
       - run:
           name: Run tests
           command: ./build test
           environment:
             - files: "versions/**/options"
-
-      # Create release images and push them to Dockerhub
-      - deploy:
+      - run:
+          name: "Clean up builders"
+          command: docker image prune -f
+      - run:
+          name: "Save containers to file"
           command: |
-            if [ "${CIRCLE_BRANCH}" == "release" ];
-              then
-                ./build release
-                docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
-                docker push troyfontaine/armhf-alpinelinux
-                docker push troyfontaine/armhf_min-alpinelinux
-                docker push troyfontaine/x86_64-alpinelinux
-                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
-                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
-            fi
+            docker image save -o built_images.tar troyfontaine/armhf_min-alpinelinux troyfontaine/armhf-alpinelinux troyfontaine/x86_64-alpinelinux
+      - save_cache:
+          key: container_image-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - built_images.tar
+
+  publish:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - restore_cache:
+          keys:
+            - container_image-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          keys:
+            - multi-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          keys:
+            - deps-{{ .Branch }}-{{ .Revision }}
+      - run:
+          name: "Load Docker Images"
+          command: docker load -i built_images.tar
+      - run:
+          name: "Log into Docker.io"
+          command: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
+      - run:
+          name: "Install manifest tool"
+          working_directory: deps/
+          command: |
+            sudo cp manifest-tool-linux-amd64 /usr/bin/manifest-tool
+      - run:
+          name: "Push Images to individual repos"
+          command: |
+            docker push troyfontaine/armhf-alpinelinux
+            docker push troyfontaine/armhf_min-alpinelinux
+            docker push troyfontaine/x86_64-alpinelinux
+      - run:
+          name: "Push Manifests for Multi-Arch Alpine Linux Images"
+          command: |
+            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
+            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
+            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
+            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
+      - run:
+          name: "Trigger Microbadger"
+          command: curl -X POST $MICROBADGER
+
+workflows:
+  version: 2
+  commit-workflow:
+    jobs:
+      - checkout_code
+      - build-and-test:
+          requires:
+            - checkout_code
+      - publish:
+          requires:
+            - checkout_code
+            - build-and-test
+          filters:
+            branches:
+              only: release
+  scheduled-workflow:
+    triggers:
+      - schedule:
+          cron: "0 1 * * *"
+          filters:
+            branches:
+              only: release
+
+    jobs:
+      - checkout_code
+      - build-and-test:
+          requires:
+            - checkout_code
+      - publish:
+          requires:
+            - checkout_code
+            - build-and-test
