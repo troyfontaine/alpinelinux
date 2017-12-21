@@ -16,7 +16,7 @@ jobs:
                 mkdir -p ~/deps
                 curl -sSL -o ~/deps/bats_v0.4.0.tar.gz \
                 https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
-              tar -xf ~/deps/bats_v0.4.0.tar.gz
+                tar -xf ~/deps/bats_v0.4.0.tar.gz
             fi
       - run:
           name: "Download Manifest Tool"
@@ -55,7 +55,7 @@ jobs:
       - run:
           name: "Install bats"
           command: |
-            sudo bats-0.4.0/install.sh /usr/local
+            sudo ~/deps/bats-0.4.0/install.sh /usr/local
       - run:
           name: "Install manifest tool"
           command: |
