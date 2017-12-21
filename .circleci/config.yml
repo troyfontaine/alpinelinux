@@ -56,13 +56,15 @@ jobs:
             - deps-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Install bats"
+          working_directory: deps/
           command: |
-            tar -xf deps/bats_v0.4.0.tar.gz
+            tar -xf bats_v0.4.0.tar.gz -C deps/bats-0.4.0
             sudo deps/bats-0.4.0/install.sh /usr/local
       - run:
           name: "Install manifest tool"
+          working_directory: deps/
           command: |
-            sudo cp deps/manifest-tool-linux-amd64 /usr/bin/manifest-tool
+            sudo cp manifest-tool-linux-amd64 /usr/bin/manifest-tool
       - run:
           name: Run build script
           command: ./build
