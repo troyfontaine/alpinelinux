@@ -1,11 +1,11 @@
 image: troyfontaine/alpinelinux:latest
-tags: [3.6,3.6.2]
+tags: [3.7,3]
 manifests:
-  - image: troyfontaine/x86_64-alpinelinux:3.6
+  - image: troyfontaine/x86_64-alpinelinux:3.7
     platform:
       architecture: amd64
       os: linux
-  - image: troyfontaine/armhf_min-alpinelinux:3.6
+  - image: troyfontaine/armhf_min-alpinelinux:3.7
     platform:
       architecture: arm
       os: linux
