@@ -90,11 +90,14 @@ jobs:
       image: circleci/classic:edge
     steps:
       - restore_cache:
-          keys: container_image-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - container_image-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          keys: project-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - project-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          keys: multi-{{ .Branch }}-{{ .Revision }}
+          keys:
+            - multi-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Load Docker Images"
           command: docker load -i built_images.tar
