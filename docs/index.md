@@ -1,6 +1,6 @@
 # Alpine Linux (Dockerized)
 
-Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=shield)](https://circleci.com/gh/troyfontaine/alpinelinux)  
+Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=svg)](https://circleci.com/gh/troyfontaine/alpinelinux)  
 
 Multi-arch (latest):  
 [![](https://images.microbadger.com/badges/image/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own image badge on microbadger.com")
@@ -115,4 +115,3 @@ The code in this repository, unless otherwise noted, is BSD licensed. See the `L
 [issues]: https://github.com/troyfontaine/armhf-alpinelinux/issues
 [alpine]: http://alpinelinux.org/
 [hub]: https://hub.docker.com/r/troyfontaine/armhf-alpinelinux/
-[gliderlabs]: https://github.com/gliderlabs/docker-alpine
