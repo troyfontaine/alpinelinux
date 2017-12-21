@@ -67,7 +67,7 @@ jobs:
             sudo cp manifest-tool-linux-amd64 /usr/bin/manifest-tool
       - run:
           name: Run build script
-          command: ./build release
+          command: ./build
       - run:
           name: Run tests
           command: ./build test
