@@ -61,11 +61,6 @@ jobs:
             tar -xf bats_v0.4.0.tar.gz
             sudo bats-0.4.0/install.sh /usr/local
       - run:
-          name: "Install manifest tool"
-          working_directory: deps/
-          command: |
-            sudo cp manifest-tool-linux-amd64 /usr/bin/manifest-tool
-      - run:
           name: Run build script
           command: ./build
       - run:
@@ -97,14 +92,18 @@ jobs:
             - project-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
-            - multi-{{ .Branch }}-{{ .Revision }}
+            - deps-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Load Docker Images"
           command: docker load -i built_images.tar
       - run:
           name: "Log into Docker.io"
           command: docker login -u $DOCKER_USER -p $DOCKER_PASSWORD docker.io
-
+      - run:
+          name: "Install manifest tool"
+          working_directory: deps/
+          command: |
+            sudo cp manifest-tool-linux-amd64 /usr/bin/manifest-tool
       - run:
           name: "Push Images to individual repos"
           command: |
