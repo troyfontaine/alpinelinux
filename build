@@ -24,12 +24,17 @@ build_amd64() {
             mytags="-t $tag $mytags"
 		done
 
+        echo "Release: $RELEASE"
+        echo "Download URL: $DOWNLOAD"
+
+        curl -o ./arch/x86_64/alpine.tgz $DOWNLOAD
+
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
-        --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/x86_64/
+        rm ./arch/x86_64/alpine.tgz
         )
 	done
     rm ./arch/x86_64/shadow
@@ -51,12 +56,18 @@ build_arm() {
             mytags="-t $tag $mytags"
 		done
 
+        echo "Release: $RELEASE"
+        echo "Download URL: $DOWNLOAD"
+
+        curl -o ./arch/armhf/alpine.tgz $DOWNLOAD
+
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
         --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf/
+        rm ./arch/armhf/alpine.tgz
         )
 	done
     rm -rf ./arch/armhf/qemu
@@ -78,6 +89,10 @@ build_arm_release() {
 		for tag in "${TAGS[@]}"; do
             mytags="-t $tag $mytags"
 		done
+        echo "Release: $RELEASE"
+        echo "Download URL: $DOWNLOAD"
+
+        curl -o ./arch/armhf_release/alpine.tgz $DOWNLOAD
 
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
@@ -85,6 +100,7 @@ build_arm_release() {
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_release/
+        rm ./arch/armhf_release/alpine.tgz
         )
 	done
     rm -rf ./arch/armhf_release/qemu

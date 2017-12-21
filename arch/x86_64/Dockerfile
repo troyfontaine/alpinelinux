@@ -1,6 +1,6 @@
 from scratch as builder
 ARG ALPINE_DOWNLOAD
-ADD $ALPINE_DOWNLOAD /
+ADD alpine.tgz /
 
 RUN apk --update add tzdata
 

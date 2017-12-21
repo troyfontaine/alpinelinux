@@ -3,7 +3,7 @@ FROM scratch as builder
 ENV QEMU_EXECVE 1
 ARG ALPINE_DOWNLOAD
 
-ADD $ALPINE_DOWNLOAD /
+ADD alpine.tgz /
 
 COPY qemu/  /usr/bin/
 
@@ -41,7 +41,7 @@ LABEL org.label-schema.build-date=$BUILD_DATE \
     com.troyfontaine.alpine-version=$ALPINE_VERSION \
     maintainer="Troy Fontaine"
 
-ADD $ALPINE_DOWNLOAD /
+ADD alpine.tgz /
 
 # Modified version of qemu https://github.com/resin-io/qemu
 # Highly inspired from https://github.com/resin-io-projects/armv7hf-debian-qemu
