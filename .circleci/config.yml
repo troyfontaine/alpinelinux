@@ -33,10 +33,12 @@ jobs:
           paths:
             - build
             - arch
-            - multi
             - qemu
             - resources
             - test
+      - save_cache:
+          key: multi-{{ .Branch }}-{{ .Revision }}
+          paths: multi
       - save_cache:
           key: deps-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -55,6 +57,7 @@ jobs:
       - run:
           name: "Install bats"
           command: |
+            tar -xf deps/bats_v0.4.0.tar.gz
             sudo deps/bats-0.4.0/install.sh /usr/local
       - run:
           name: "Install manifest tool"
@@ -85,14 +88,11 @@ jobs:
       image: circleci/classic:edge
     steps:
       - restore_cache:
-          keys:
-            - container_image-{{ .Branch }}-{{ .Revision }}
+          keys: container_image-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          keys:
-            - project-{{ .Branch }}-{{ .Revision }}
+          keys: project-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
-          keys:
-            - deps-{{ .Branch }}-{{ .Revision }}
+          keys: multi-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Load Docker Images"
           command: docker load -i built_images.tar
