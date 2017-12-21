@@ -44,6 +44,7 @@ jobs:
                 docker push troyfontaine/armhf-alpinelinux
                 docker push troyfontaine/armhf_min-alpinelinux
                 docker push troyfontaine/x86_64-alpinelinux
+                manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
                 manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
                 manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
                 manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
