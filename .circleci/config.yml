@@ -28,7 +28,8 @@ jobs:
                 https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
             fi
             chmod +x ~/deps/manifest-tool-linux-amd64
-
+      - run:
+          name: "Grab checksums"
       - save_cache:
           key: project-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -39,7 +40,7 @@ jobs:
             - resources
             - test
       - save_cache:
-          key: deps-{{ checksum "~/deps/bats_v0.4.0.tar.gz" }}-{{ checksum "~/deps/manifest-tool-linux-amd64" }}
+          key: deps-{{ .Branch }}-{{ .Revision }}
           paths:
             - deps
 
@@ -52,7 +53,7 @@ jobs:
             - project-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
-            - deps-{{ checksum "~/deps/bats_v0.4.0.tar.gz" }}-{{ checksum "~/deps/manifest-tool-linux-amd64" }}
+            - deps-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Install bats"
           command: |
@@ -93,7 +94,7 @@ jobs:
             - project-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
-            - deps-{{ checksum "~/deps/bats_v0.4.0.tar.gz" }}-{{ checksum "~/deps/manifest-tool-linux-amd64" }}
+            - deps-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Load Docker Images"
           command: docker load -i built_images.tar
