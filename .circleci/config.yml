@@ -28,8 +28,6 @@ jobs:
                 https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
             fi
             chmod +x ~/deps/manifest-tool-linux-amd64
-      - run:
-          name: "Grab checksums"
       - save_cache:
           key: project-{{ .Branch }}-{{ .Revision }}
           paths:
