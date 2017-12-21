@@ -107,6 +107,7 @@ jobs:
             docker push troyfontaine/x86_64-alpinelinux
       - run:
           name: "Push Manifests for Multi-Arch Alpine Linux Images"
+          command: |
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
