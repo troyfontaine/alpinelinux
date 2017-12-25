@@ -11,5 +11,5 @@ manifests:
       os: linux
   - image: troyfontaine/arm64v8_min-alpinelinux:3.7
     platform:
-      architecture: arm64v8
+      architecture: arm64
       os: linux
