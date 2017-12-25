@@ -175,6 +175,7 @@ build_arm64_min() {
 
 run_tests() {
     x86_64_tests
+    armhf_tests
     arm64v8_tests
 }
 
