@@ -41,7 +41,7 @@ build_amd64() {
 
 build_arm() {
     cp resources/shadow ./arch/armhf/
-    cp -r ./arch/armhf/qemu-arm ./arch/armhf/
+    cp -r ./qemu-arm ./arch/armhf/
     mv ./arch/armhf/qemu-arm ./arch/armhf/qemu
 	declare arm_build_files="${*:-arch/armhf/**/options}"
 
