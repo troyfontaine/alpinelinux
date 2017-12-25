@@ -1,0 +1,4 @@
+export RELEASE="edge"
+export DOWNLOAD='http://dl-3.alpinelinux.org/alpine/edge/releases/armhf/alpine-minirootfs-3.7.0-armhf.tar.gz'
+export TAGS=(troyfontaine/armhf_min-alpinelinux:edge)
+export PUSH_IMAGE="false"

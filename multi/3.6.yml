@@ -9,3 +9,7 @@ manifests:
     platform:
       architecture: arm
       os: linux
+  - image: troyfontaine/arm64v8_min-alpinelinux:3.6
+    platform:
+      architecture: arm64v8
+      os: linux

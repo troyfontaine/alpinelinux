@@ -3,7 +3,9 @@
 build() {
     build_amd64
     build_arm
-    build_arm_release
+    build_arm_min
+    build_arm64
+    build_arm64_min
 }
 
 build_amd64() {
@@ -39,7 +41,8 @@ build_amd64() {
 
 build_arm() {
     cp resources/shadow ./arch/armhf/
-    cp -r ./qemu ./arch/armhf/
+    cp -r ./qemu-arm ./arch/armhf/
+    mv ./arch/armhf/qemu-arm ./arch/armhf/qemu
 	declare arm_build_files="${*:-arch/armhf/**/options}"
 
 	for file in $arm_build_files; do
@@ -60,24 +63,58 @@ build_arm() {
 
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
-        --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
 		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf/
         rm ./arch/armhf/alpine.tgz
         )
 	done
-    rm -rf ./arch/armhf/qemu
+    rm -rf ./arch/armhf/qemu-arm
     rm ./arch/armhf/shadow
 }
 
-build_arm_release() {
-    cp resources/shadow ./arch/armhf_release/
-    cp -r ./qemu ./arch/armhf_release/
-	declare arm_build_files="${*:-arch/armhf_release/**/options}"
+build_arm64() {
+    cp resources/shadow ./arch/arm64v8/
+    cp -r ./qemu-arm64 ./arch/arm64v8/
+    mv ./arch/arm64v8/qemu-arm64 ./arch/arm64v8/qemu
+	declare arm_build_files="${*:-arch/arm64v8/**/options}"
 
 	for file in $arm_build_files; do
-        ( # shellcheck source=armhf_release/stock-VV/options
+        ( # shellcheck source=arch/arm64v8/stock-VV/options
+		source "$file"
+		local version_dir
+		version_dir="$(dirname "$file")"
+		: "${TAGS:?}" "${RELEASE:?}" "${DOWNLOAD:?}"
+
+		for tag in "${TAGS[@]}"; do
+            mytags="-t $tag $mytags"
+		done
+
+        echo "Release: $RELEASE"
+        echo "Download URL: $DOWNLOAD"
+
+        curl -o ./arch/arm64v8/alpine.tgz $DOWNLOAD
+
+		docker build $mytags \
+		--build-arg ALPINE_VERSION=${RELEASE} \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/arm64v8/
+        rm ./arch/arm64v8/alpine.tgz
+        )
+	done
+    rm -rf ./arch/arm64v8/qemu-arm64
+    rm ./arch/arm64v8/shadow
+}
+
+build_arm_min() {
+    cp resources/shadow ./arch/armhf_min/
+    cp -r ./qemu-arm ./arch/armhf_min/
+    mv ./arch/armhf_min/qemu-arm ./arch/armhf_min/qemu
+	declare arm_build_files="${*:-arch/armhf_min/**/options}"
+
+	for file in $arm_build_files; do
+        ( # shellcheck source=armhf_min/stock-VV/options
 		source "$file"
 		local version_dir
 		version_dir="$(dirname "$file")"
@@ -89,24 +126,56 @@ build_arm_release() {
         echo "Release: $RELEASE"
         echo "Download URL: $DOWNLOAD"
 
-        curl -o ./arch/armhf_release/alpine.tgz $DOWNLOAD
+        curl -o ./arch/armhf_min/alpine.tgz $DOWNLOAD
 
 		docker build $mytags \
 		--build-arg ALPINE_VERSION=${RELEASE} \
-        --build-arg ALPINE_DOWNLOAD=${DOWNLOAD} \
 		--build-arg VCS_REF=`git rev-parse --short HEAD` \
 		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
-		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_release/
-        rm ./arch/armhf_release/alpine.tgz
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/armhf_min/
+        rm ./arch/armhf_min/alpine.tgz
         )
 	done
-    rm -rf ./arch/armhf_release/qemu
-    rm ./arch/armhf_release/shadow
+    rm -rf ./arch/armhf_min/qemu
+    rm ./arch/armhf_min/shadow
+}
+
+build_arm64v8_min() {
+    cp resources/shadow ./arch/arm64v8_min/
+    cp -r ./qemu ./arch/arm64v8_min/
+    mv ./arch/arm64v8_min/qemu-arm64 ./arch/arm64v8_min/qemu
+	declare arm_build_files="${*:-arch/arm64v8_min/**/options}"
+
+	for file in $arm_build_files; do
+        ( # shellcheck source=arm64v8_min/stock-VV/options
+		source "$file"
+		local version_dir
+		version_dir="$(dirname "$file")"
+		: "${TAGS:?}" "${RELEASE:?}" "${DOWNLOAD:?}"
+
+		for tag in "${TAGS[@]}"; do
+            mytags="-t $tag $mytags"
+		done
+        echo "Release: $RELEASE"
+        echo "Download URL: $DOWNLOAD"
+
+        curl -o ./arch/arm64v8_min/alpine.tgz $DOWNLOAD
+
+		docker build $mytags \
+		--build-arg ALPINE_VERSION=${RELEASE} \
+		--build-arg VCS_REF=`git rev-parse --short HEAD` \
+		--build-arg BUILD_DATE=`date -u +"%Y-%m-%dT%H:%M:%SZ"` \
+		--build-arg VERSION=`date -u +"%Y.%m.%d.%H:%MZ"` arch/arm64v8_min/
+        rm ./arch/arm64v8_min/alpine.tgz
+        )
+	done
+    rm -rf ./arch/arm64v8_min/qemu
+    rm ./arch/arm64v8_min/shadow
 }
 
 run_tests() {
     x86_64_tests
-    armhf_tests
+    arm64v8_tests
 }
 
 x86_64_tests() {
@@ -135,6 +204,19 @@ armhf_tests() {
 	bats "${test_files[@]}"
 }
 
+arm64v8_tests() {
+	declare build_files="${*:-arch/arm64v8/**/options}"
+	declare -a test_files
+	for file in $build_files; do
+		# shellcheck source=arch/arm64v8/stock-XX/options
+		source "$file"
+		local tag
+		tag="${TAGS[0]}" tag="${tag//:/-}" tag="${tag//\//_}"
+		test_files+=("test/test_${tag}.bats")
+	done
+	bats "${test_files[@]}"
+}
+
 main() {
 	set -eo pipefail; [[ "$TRACE" ]] && set -x
 	declare cmd="$1"
@@ -142,7 +224,9 @@ main() {
 		test)	shift;	run_tests "$@";;
         test_amd64) shift; x86_64_tests "$@";;
         test_arm)   shift; armhf_tests "$@";;
+        test_arm64)   shift; arm64v8_tests "$@";;
         build_arm)  build_arm;;
+        build_arm64)  build_arm64;;
         build_amd64)   build_amd64;;
 		*)		build "$@";;
 	esac
