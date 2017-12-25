@@ -17,6 +17,16 @@ ARMHF(Latest):
 [![](https://images.microbadger.com/badges/version/troyfontaine/armhf_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/armhf_min-alpinelinux "Get your own version badge on microbadger.com")
 [![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/armhf_min-alpinelinux.svg)]()
 [![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/armhf_min-alpinelinux.svg)]()  
+ARM64v8 with QEMU (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/arm64v8-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/arm64v8-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/arm64v8-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/arm64v8-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/arm64v8_min-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/arm64v8_min-alpinelinux.svg)]()  
+ARM64v8 (Latest):  
+[![](https://images.microbadger.com/badges/image/troyfontaine/arm64v8_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/arm64v8_min-alpinelinux "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/troyfontaine/arm64v8_min-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/arm64v8_min-alpinelinux "Get your own version badge on microbadger.com")
+[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/arm64v8_min-alpinelinux.svg)]()
+[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/arm64v8_min-alpinelinux.svg)]()  
 x86_64 (Latest):  
 [![](https://images.microbadger.com/badges/image/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own image badge on microbadger.com")
 [![](https://images.microbadger.com/badges/version/troyfontaine/x86_64-alpinelinux.svg)](https://microbadger.com/images/troyfontaine/x86_64-alpinelinux "Get your own version badge on microbadger.com")
