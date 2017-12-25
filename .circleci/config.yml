@@ -37,6 +37,7 @@ jobs:
             - qemu-arm64
             - resources
             - test
+            - .git
       - save_cache:
           key: multi-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -128,7 +129,13 @@ jobs:
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
       - run:
           name: "Trigger Microbadger"
-          command: curl -X POST $MICROBADGER
+          command: |
+            curl -X POST $mb_general
+            curl -X POST $mb_arm
+            curl -X POST $mb_arm_min
+            curl -X POST $mb_arm64
+            curl -X POST $mb_arm64_min
+
 
 workflows:
   version: 2
