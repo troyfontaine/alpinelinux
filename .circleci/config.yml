@@ -75,7 +75,12 @@ jobs:
       - run:
           name: "Save containers to file"
           command: |
-            docker image save -o built_images.tar troyfontaine/armhf_min-alpinelinux troyfontaine/armhf-alpinelinux troyfontaine/x86_64-alpinelinux
+            docker image save -o built_images.tar \
+            troyfontaine/arm64v8_min-alpinelinux \
+            troyfontaine/arm64v8-alpinelinux \
+            troyfontaine/armhf_min-alpinelinux \
+            troyfontaine/armhf-alpinelinux \
+            troyfontaine/x86_64-alpinelinux
       - save_cache:
           key: container_image-{{ .Branch }}-{{ .Revision }}
           paths:
@@ -110,6 +115,8 @@ jobs:
           command: |
             docker push troyfontaine/armhf-alpinelinux
             docker push troyfontaine/armhf_min-alpinelinux
+            docker push troyfontaine/arm64v8-alpinelinux
+            docker push troyfontaine/arm64v8_min-alpinelinux
             docker push troyfontaine/x86_64-alpinelinux
       - run:
           name: "Push Manifests for Multi-Arch Alpine Linux Images"
@@ -140,7 +147,7 @@ workflows:
   scheduled-workflow:
     triggers:
       - schedule:
-          cron: "0 1 * * *"
+          cron: "0 4 * * *"
           filters:
             branches:
               only: release
