@@ -33,7 +33,8 @@ jobs:
           paths:
             - build
             - arch
-            - qemu
+            - qemu-arm
+            - qemu-arm64
             - resources
             - test
       - save_cache:
