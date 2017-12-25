@@ -41,7 +41,7 @@ build_amd64() {
 
 build_arm() {
     cp resources/shadow ./arch/armhf/
-    cp -r ./qemu-arm ./arch/armhf/
+    cp -r ./arch/armhf/qemu-arm ./arch/armhf/
     mv ./arch/armhf/qemu-arm ./arch/armhf/qemu
 	declare arm_build_files="${*:-arch/armhf/**/options}"
 
@@ -69,7 +69,7 @@ build_arm() {
         rm ./arch/armhf/alpine.tgz
         )
 	done
-    rm -rf ./arch/armhf/qemu-arm
+    rm -rf ./arch/armhf/qemu
     rm ./arch/armhf/shadow
 }
 
@@ -103,7 +103,7 @@ build_arm64() {
         rm ./arch/arm64v8/alpine.tgz
         )
 	done
-    rm -rf ./arch/arm64v8/qemu-arm64
+    rm -rf ./arch/arm64v8/qemu
     rm ./arch/arm64v8/shadow
 }
 
@@ -140,9 +140,9 @@ build_arm_min() {
     rm ./arch/armhf_min/shadow
 }
 
-build_arm64v8_min() {
+build_arm64_min() {
     cp resources/shadow ./arch/arm64v8_min/
-    cp -r ./qemu ./arch/arm64v8_min/
+    cp -r ./qemu-arm64 ./arch/arm64v8_min/
     mv ./arch/arm64v8_min/qemu-arm64 ./arch/arm64v8_min/qemu
 	declare arm_build_files="${*:-arch/arm64v8_min/**/options}"
 
