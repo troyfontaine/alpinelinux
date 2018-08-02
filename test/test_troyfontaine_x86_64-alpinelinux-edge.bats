@@ -5,7 +5,7 @@ setup() {
 @test "x86_64 Edge version is correct" {
   run docker container run --rm troyfontaine/x86_64-alpinelinux:edge cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.8.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
 }
 
 @test "x86_64 Edge package installs cleanly" {
