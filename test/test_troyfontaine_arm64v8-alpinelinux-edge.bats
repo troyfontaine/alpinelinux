@@ -5,7 +5,7 @@ setup() {
 @test "ARM64v8 Edge version is correct" {
   run docker container run --rm troyfontaine/arm64v8-alpinelinux:edge cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.8.0" ]
 }
 
 @test "ARM64v8 Edge package installs cleanly" {
@@ -20,10 +20,10 @@ setup() {
 }
 
 @test "ARM64v8 Edge repository list is correct" {
-  run docker container run --rm troyfontaine/arm64v8-alpinelinux:3.6 cat /etc/apk/repositories
+  run docker container run --rm troyfontaine/arm64v8-alpinelinux:edge cat /etc/apk/repositories
   [ $status -eq 0 ]
-  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.6/main" ]
-  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" ]
+  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.8/main" ]
+  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.8/community" ]
 }
 
 @test "ARM64v8 Edge cache is empty" {

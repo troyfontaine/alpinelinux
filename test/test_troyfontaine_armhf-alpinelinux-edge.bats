@@ -5,7 +5,7 @@ setup() {
 @test "ARM Edge version is correct" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:edge cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.8.0" ]
 }
 
 @test "ARM Edge package installs cleanly" {
@@ -20,10 +20,10 @@ setup() {
 }
 
 @test "ARM Edge repository list is correct" {
-  run docker container run --rm troyfontaine/armhf-alpinelinux:3.6 cat /etc/apk/repositories
+  run docker container run --rm troyfontaine/armhf-alpinelinux:edge cat /etc/apk/repositories
   [ $status -eq 0 ]
-  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.6/main" ]
-  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.6/community" ]
+  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.8/main" ]
+  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.8/community" ]
 }
 
 @test "ARM Edge cache is empty" {
