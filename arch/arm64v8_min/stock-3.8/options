@@ -1,0 +1,4 @@
+export RELEASE="3.8.0"
+export DOWNLOAD='http://dl-3.alpinelinux.org/alpine/v3.8/releases/aarch64/alpine-minirootfs-3.8.0-aarch64.tar.gz'
+export TAGS=(troyfontaine/arm64v8_min-alpinelinux:3.8 troyfontaine/arm64v8_min-alpinelinux:3.8.0 troyfontaine/arm64v8_min-alpinelinux:latest)
+export PUSH_IMAGE="false"
