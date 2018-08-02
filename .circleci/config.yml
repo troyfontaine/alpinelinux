@@ -125,7 +125,7 @@ jobs:
           command: |
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
+            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.8.yml
             manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
       - run:
           name: "Trigger Microbadger"
