@@ -22,8 +22,8 @@ setup() {
 @test "ARM Edge repository list is correct" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:edge cat /etc/apk/repositories
   [ $status -eq 0 ]
-  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/edge/main" ]
-  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/edge/community" ]
+  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.7/main" ]
+  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.7/community" ]
 }
 
 @test "ARM Edge cache is empty" {
