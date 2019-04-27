@@ -5,7 +5,7 @@ setup() {
 @test "ARM 3.5 version is correct" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:3.5 cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.5.2" ]
+  [ "${lines[2]}" = "VERSION_ID=3.5.3" ]
 }
 
 @test "ARM 3.5 package installs cleanly" {

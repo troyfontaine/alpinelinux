@@ -1,4 +1,4 @@
 export RELEASE="3.5"
-export DOWNLOAD='http://dl-3.alpinelinux.org/alpine/v3.5/releases/x86_64/alpine-minirootfs-3.5.2-x86_64.tar.gz'
-export TAGS=(troyfontaine/x86_64-alpinelinux:3.5)
+export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/v3.5/releases/x86_64/alpine-minirootfs-3.5.3-x86_64.tar.gz'
+export TAGS=(troyfontaine/x86_64-alpinelinux:3.5 troyfontaine/x86_64-alpinelinux:3.5.3)
 export PUSH_IMAGE="false"
