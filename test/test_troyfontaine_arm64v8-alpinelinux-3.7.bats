@@ -5,7 +5,7 @@ setup() {
 @test "ARM64v8 3.7 version is correct" {
   run docker container run --rm troyfontaine/arm64v8-alpinelinux:3.7 cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.7.3" ]
 }
 
 @test "ARM64v8 3.7 package installs cleanly" {

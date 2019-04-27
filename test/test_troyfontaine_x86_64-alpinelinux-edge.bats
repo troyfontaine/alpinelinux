@@ -5,7 +5,7 @@ setup() {
 @test "x86_64 Edge version is correct" {
   run docker container run --rm troyfontaine/x86_64-alpinelinux:edge cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.7.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.9.0" ]
 }
 
 @test "x86_64 Edge package installs cleanly" {
@@ -27,8 +27,8 @@ setup() {
 @test "x86_64 Edge repository list is correct" {
   run docker container run --rm troyfontaine/x86_64-alpinelinux:edge cat /etc/apk/repositories
   [ $status -eq 0 ]
-  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.7/main" ]
-  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.7/community" ]
+  [ "${lines[0]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.9/main" ]
+  [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.9/community" ]
 }
 
 @test "x86_64 Edge cache is empty" {

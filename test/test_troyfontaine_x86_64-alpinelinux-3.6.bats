@@ -5,7 +5,7 @@ setup() {
 @test "x86_64 3.6 version is correct" {
   run docker container run --rm troyfontaine/x86_64-alpinelinux:3.6 cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.6.2" ]
+  [ "${lines[2]}" = "VERSION_ID=3.6.5" ]
 }
 
 @test "x86_64 3.6 package installs cleanly" {

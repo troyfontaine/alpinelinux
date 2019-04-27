@@ -1,5 +1,5 @@
 image: troyfontaine/alpinelinux:3.6
-tags: [3.6.2]
+tags: [3.6.5]
 manifests:
   - image: troyfontaine/x86_64-alpinelinux:3.6
     platform:

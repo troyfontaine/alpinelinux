@@ -1,5 +1,5 @@
-image: troyfontaine/alpinelinux:latest
-tags: [3.8.0,3.8,3]
+image: troyfontaine/alpinelinux:3.8
+tags: [3.8.4]
 manifests:
   - image: troyfontaine/x86_64-alpinelinux:3.8
     platform:

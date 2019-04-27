@@ -1,11 +1,11 @@
 setup() {
-  docker history "troyfontaine/armhf-alpinelinux:3.8" >/dev/null 2>&1
+  docker history troyfontaine/armhf-alpinelinux:3.8 >/dev/null 2>&1
 }
 
 @test "ARM 3.8 version is correct" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:3.8 cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.8.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.8.4" ]
 }
 
 @test "ARM 3.8 package installs cleanly" {
@@ -26,7 +26,7 @@ setup() {
   [ "${lines[1]}" = "http://dl-cdn.alpinelinux.org/alpine/v3.8/community" ]
 }
 
-@test "ARM 3.5 cache is empty" {
+@test "ARM 3.8 cache is empty" {
   run docker container run --rm troyfontaine/armhf-alpinelinux:3.8 sh -c "ls -1 /var/cache/apk | wc -l"
   [ $status -eq 0 ]
   [ "$output" = "0" ]

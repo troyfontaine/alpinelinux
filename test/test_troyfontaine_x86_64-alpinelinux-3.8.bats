@@ -1,11 +1,11 @@
 setup() {
-  docker history troyfontaine/x86_64-alpinelinux:3.8 >/dev/null 2>&1
+  docker history "troyfontaine/x86_64-alpinelinux:3.8" >/dev/null 2>&1
 }
 
 @test "x86_64 3.8 version is correct" {
   run docker container run --rm troyfontaine/x86_64-alpinelinux:3.8 cat /etc/os-release
   [ $status -eq 0 ]
-  [ "${lines[2]}" = "VERSION_ID=3.8.0" ]
+  [ "${lines[2]}" = "VERSION_ID=3.8.4" ]
 }
 
 @test "x86_64 3.8 package installs cleanly" {
