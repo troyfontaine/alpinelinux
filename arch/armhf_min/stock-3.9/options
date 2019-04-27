@@ -1,4 +1,4 @@
 export RELEASE="3.9"
-export DOWNLOAD='http://dl-3.alpinelinux.org/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.3-armhf.tar.gz'
+export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/armhf/alpine-minirootfs-3.9.3-armhf.tar.gz'
 export TAGS=(troyfontaine/armhf_min-alpinelinux:3.9 troyfontaine/armhf_min-alpinelinux:3.9.3 troyfontaine/armhf_min-alpinelinux:latest)
 export PUSH_IMAGE="false"
