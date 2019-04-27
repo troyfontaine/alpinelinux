@@ -1,4 +1,5 @@
 image: troyfontaine/alpinelinux:3.5
+tags: [3.5.3]
 manifests:
   - image: troyfontaine/x86_64-alpinelinux:3.5
     platform:
