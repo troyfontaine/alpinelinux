@@ -29,6 +29,10 @@ jobs:
             fi
             chmod +x deps/manifest-tool-linux-amd64
       - save_cache:
+          key: build-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - build
+      - save_cache:
           key: project-{{ .Branch }}-{{ .Revision }}
           paths:
             - build
@@ -51,6 +55,9 @@ jobs:
     machine:
       image: circleci/classic:edge
     steps:
+      - restore_cache:
+          keys:
+            - build-{{ .Branch }}-{{ .Revision }}
       - restore_cache:
           keys:
             - project-{{ .Branch }}-{{ .Revision }}
@@ -101,6 +108,9 @@ jobs:
       - restore_cache:
           keys:
             - deps-{{ .Branch }}-{{ .Revision }}
+      - restore_cache:
+          keys:
+            - build-{{ .Branch }}-{{ .Revision }}
       - run:
           name: "Load Docker Images"
           command: docker load -i built_images.tar
@@ -115,21 +125,23 @@ jobs:
       - run:
           name: "Push Images to individual repos"
           command: |
-            docker push troyfontaine/armhf-alpinelinux
-            docker push troyfontaine/armhf_min-alpinelinux
-            docker push troyfontaine/arm64v8-alpinelinux
-            docker push troyfontaine/arm64v8_min-alpinelinux
-            docker push troyfontaine/x86_64-alpinelinux
+            ./build push
+            # docker push troyfontaine/armhf-alpinelinux
+            # docker push troyfontaine/armhf_min-alpinelinux
+            # docker push troyfontaine/arm64v8-alpinelinux
+            # docker push troyfontaine/arm64v8_min-alpinelinux
+            # docker push troyfontaine/x86_64-alpinelinux
       - run:
           name: "Push Manifests for Multi-Arch Alpine Linux Images"
           command: |
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.8.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.9.yml
-            manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
+            ./build publish
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.8.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.9.yml
+            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
       - run:
           name: "Trigger Microbadger"
           command: |

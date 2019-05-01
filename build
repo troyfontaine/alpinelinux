@@ -8,7 +8,35 @@ build() {
     build_arm64_min
 }
 
-publish() {
+push() {
+  push_amd64
+  push_arm_min
+  push_arm
+  push_arm64_min
+  push_arm64
+}
+
+push_amd64() {
+  docker push troyfontaine/x86_64-alpinelinux
+}
+
+push_arm_min() {
+  docker push troyfontaine/armhf_min-alpinelinux
+}
+
+push_arm() {
+  docker push troyfontaine/armhf-alpinelinux
+}
+
+push_arm64_min() {
+  docker push troyfontaine/arm64v8_min-alpinelinux
+}
+
+push arm64() {
+  docker push troyfontaine/arm64v8-alpinelinux
+}
+
+publish_manifests() {
   declare manifest_location="${*:-multi}"
   for file in $manifest_location; do
     manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec $file
@@ -229,14 +257,16 @@ main() {
 	set -eo pipefail; [[ "$TRACE" ]] && set -x
 	declare cmd="$1"
 	case "$cmd" in
-		test)	shift;	run_tests "$@";;
-        test_amd64) shift; x86_64_tests "$@";;
-        test_arm)   shift; armhf_tests "$@";;
-        test_arm64)   shift; arm64v8_tests "$@";;
-        build_arm)  build_arm;;
-        build_arm64)  build_arm64;;
-        build_amd64)   build_amd64;;
-		*)		build "$@";;
+		test)  shift;  run_tests "$@";;
+    test_amd64)  shift; x86_64_tests "$@";;
+    test_arm)  shift; armhf_tests "$@";;
+    test_arm64)  shift; arm64v8_tests "$@";;
+    build_arm)  build_arm;;
+    build_arm64)  build_arm64;;
+    build_amd64)   build_amd64;;
+    push)  push;;
+    publish)  publish_manifests;;
+		*)    build "$@";;
 	esac
 }
 
