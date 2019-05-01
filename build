@@ -37,7 +37,7 @@ push_arm64() {
 }
 
 publish_manifests() {
-  declare manifest_location="${*:-multi}"
+  declare manifest_location="${*:-multi/*}"
   for file in $manifest_location; do
     manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec $file
   done
