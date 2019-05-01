@@ -32,7 +32,7 @@ push_arm64_min() {
   docker push troyfontaine/arm64v8_min-alpinelinux
 }
 
-push arm64() {
+push_arm64() {
   docker push troyfontaine/arm64v8-alpinelinux
 }
 
