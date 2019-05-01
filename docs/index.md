@@ -39,9 +39,9 @@ A super small set of Docker images based on [Alpine Linux][alpine]. The non-qemu
 
 This is intended to automatically build using CircleCI on a daily basis using the schedule functionality included with CircleCI 2.0.
 
-[multi-arch](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/alpinelinux)
-[ARM64 with QEMU](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/arm64v8-alpinelinux) 
-[ARM64](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/arm64v8_min-alpinelinux) 
+[multi-arch](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/alpinelinux)  
+[ARM64 with QEMU](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/arm64v8-alpinelinux)  
+[ARM64](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/arm64v8_min-alpinelinux)  
 [ARMHF with QEMU](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/armhf-alpinelinux)  
 [ARMHF](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/armhf_min-alpinelinux)  
 [x86_64](https://cloud.docker.com/u/troyfontaine/repository/docker/troyfontaine/x86_64-alpinelinux)  
