@@ -71,6 +71,10 @@ jobs:
             tar -xf bats_v0.4.0.tar.gz
             sudo bats-0.4.0/install.sh /usr/local
       - run:
+          name: "Enable QEMU"
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static:register
+      - run:
           name: Run build script
           command: ./build
       - run:
@@ -126,22 +130,10 @@ jobs:
           name: "Push Images to individual repos"
           command: |
             ./build push
-            # docker push troyfontaine/armhf-alpinelinux
-            # docker push troyfontaine/armhf_min-alpinelinux
-            # docker push troyfontaine/arm64v8-alpinelinux
-            # docker push troyfontaine/arm64v8_min-alpinelinux
-            # docker push troyfontaine/x86_64-alpinelinux
       - run:
           name: "Push Manifests for Multi-Arch Alpine Linux Images"
           command: |
             ./build publish
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.5.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.7.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.6.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.8.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/3.9.yml
-            # manifest-tool --username $DOCKER_USER --password $DOCKER_PASSWORD push from-spec ./multi/edge.yml
       - run:
           name: "Trigger Microbadger"
           command: |
