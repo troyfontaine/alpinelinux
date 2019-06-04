@@ -71,6 +71,10 @@ jobs:
             tar -xf bats_v0.4.0.tar.gz
             sudo bats-0.4.0/install.sh /usr/local
       - run:
+          name: "Enable QEMU"
+          command: |
+            docker run --rm --privileged multiarch/qemu-user-static:register
+      - run:
           name: Run build script
           command: ./build
       - run:
