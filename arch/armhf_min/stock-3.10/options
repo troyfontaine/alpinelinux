@@ -1,0 +1,4 @@
+export RELEASE="3.10"
+export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/v3.10/releases/armhf/alpine-minirootfs-3.10.3-armhf.tar.gz'
+export TAGS=(troyfontaine/armhf_min-alpinelinux:3.10 troyfontaine/armhf_min-alpinelinux:3.10.3 troyfontaine/armhf_min-alpinelinux:latest)
+export PUSH_IMAGE="false"

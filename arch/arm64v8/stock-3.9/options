@@ -1,4 +1,4 @@
 export RELEASE="3.9"
 export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/v3.9/releases/aarch64/alpine-minirootfs-3.9.4-aarch64.tar.gz'
-export TAGS=(troyfontaine/arm64v8-alpinelinux:3.9 troyfontaine/arm64v8-alpinelinux:3.9.4 troyfontaine/arm64v8-alpinelinux:latest)
+export TAGS=(troyfontaine/arm64v8-alpinelinux:3.9 troyfontaine/arm64v8-alpinelinux:3.9.4)
 export PUSH_IMAGE="false"
