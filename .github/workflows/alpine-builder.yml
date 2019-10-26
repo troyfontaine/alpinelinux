@@ -45,3 +45,10 @@ jobs:
               https://github.com/estesp/manifest-tool/releases/download/v0.6.0/manifest-tool-linux-amd64
         fi
         chmod +x deps/manifest-tool-linux-amd64
+    - name: Run build script
+      run: ./build
+    - name: Run tests
+      run: ./build test
+      env:
+        files: "versions/**/options"
+        
