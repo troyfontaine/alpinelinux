@@ -17,6 +17,7 @@ jobs:
             curl -sSL -o deps/bats_v0.4.0.tar.gz \
             https://github.com/sstephenson/bats/archive/v0.4.0.tar.gz
             tar -xf deps/bats_v0.4.0.tar.gz
+            sudo bats-0.4.0/install.sh /usr/local
         fi
     - name: Install Docker Deps
       run: |
