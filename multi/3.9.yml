@@ -1,5 +1,5 @@
 image: troyfontaine/alpinelinux:latest
-tags: [3.9,4.9.3,3]
+tags: [3.9,3.9.4,3]
 manifests:
   - image: troyfontaine/x86_64-alpinelinux:3.9
     platform:
