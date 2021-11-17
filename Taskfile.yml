@@ -199,7 +199,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $(GITHUB_WORKSPACE)
+      WORKINGDIR: $GITHUB_WORKSPACE
 
 
   test-images:
@@ -331,7 +331,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $(GITHUB_WORKSPACE)
+      WORKINGDIR: $GITHUB_WORKSPACE
 
   create-manifest:
     desc: Create the multi-arch manifest
