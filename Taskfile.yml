@@ -97,12 +97,12 @@ tasks:
             URI_PATH="alpine-minirootfs-${release}-${arch}.tar.gz"
 
             # Grab our root file system
-            wget -O \
+            wget -q --show-progress -O \
               "./filesystem/${version}/$target_arch/alpine.tar.gz" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}"
 
             # Grab the signature for the file
-            wget -O \
+            wget -q --show-progress -O \
               "./filesystem/${version}/$target_arch/key.asc" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
 
@@ -181,7 +181,7 @@ tasks:
             fi
 
             arch="$target_arch" \
-            # workingdir={{ .WORKINGDIR }} \
+            # workingdir=$GITHUB_WORKSPACE \
             release="$release" \
             version="$version" \
             owner={{ .OWNER }} \
@@ -199,8 +199,6 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $GITHUB_WORKSPACE
-
 
   test-images:
     desc: Run tests against the local images
@@ -313,7 +311,7 @@ tasks:
             fi
 
             arch="$target_arch" \
-            # workingdir={{ .WORKINGDIR }} \
+            workingdir=$GITHUB_WORKSPACE \
             release="$release" \
             version="$version" \
             owner={{ .OWNER }} \
@@ -331,7 +329,6 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $GITHUB_WORKSPACE
 
   create-manifest:
     desc: Create the multi-arch manifest
