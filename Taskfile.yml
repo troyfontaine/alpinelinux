@@ -9,14 +9,24 @@ env:
   CDN: "https://dl-cdn.alpinelinux.org/alpine"
 
 tasks:
-  build-test:
+  build-test-local:
     desc: Build images to test locally
     cmds:
       - task: get-signingkey
+      - task: create-buildx-builder
       - task: get-rootfs
       - task: build-local
       - task: test-images
       - task: cleanup
+      - task: remove-buildx-builder
+
+  build-test-gha:
+    desc: Build images to test via GHA
+    cmds:
+      - task: get-signingkey
+      - task: get-rootfs
+      - task: build-gha
+      - task: test-images
 
   build-release:
     desc: Build images to push to Dockerhub and create multi-arch manifest
@@ -26,6 +36,28 @@ tasks:
       - task: build-and-push
       - task: create-release
       - task: cleanup
+
+  build-release-gha:
+    desc: Build images to test via GHA
+    cmds:
+      - task: get-signingkey
+      - task: get-rootfs
+      - task: build-and-push-gha
+      - task: create-release
+
+  create-buildx-builder:
+    desc: Setup
+    cmds:
+      - |
+        docker buildx create --name alpinebuilder \
+        --platform linux/arm64,linux/amd64,linux/armhf \
+        --driver docker-container --use
+
+  remove-buildx-builder:
+    desc: Setup
+    cmds:
+      - |
+        docker buildx rm alpinebuilder
 
   get-signingkey:
     desc: Get the Alpine signing key
@@ -106,6 +138,49 @@ tasks:
             fi
 
             arch="$target_arch" \
+            workingdir={{ .WORKINGDIR }} \
+            release="$release" \
+            version="$version" \
+            owner={{ .OWNER }} \
+            repository={{ .REPOSITORY }} \
+            docker buildx bake \
+            --set container.context="./filesystem/$version/$target_arch/" \
+            --set container.platform="linux/$target_arch" \
+            --set container.args.VCS_REF={{ .VCS_REF }} \
+            --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --set container.args.ALPINE_VERSION=$release \
+            --set container.args.VERSION=$version \
+            --load
+          done
+        done
+    vars:
+      VCS_REF: $(git rev-parse --short HEAD)
+      BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      WORKINGDIR: $(PWD)
+
+  build-gha:
+    desc: Build container images using the downloaded minirootfs tar balls
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
+          for arch in "${architectures[@]}"
+          do
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+            fi
+
+            arch="$target_arch" \
             # workingdir={{ .WORKINGDIR }} \
             release="$release" \
             version="$version" \
@@ -124,7 +199,8 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      #WORKINGDIR: $(PWD)
+      WORKINGDIR: $(GITHUB_WORKSPACE)
+
 
   test-images:
     desc: Run tests against the local images
@@ -194,6 +270,49 @@ tasks:
             fi
 
             arch="$target_arch" \
+            workingdir={{ .WORKINGDIR }} \
+            release="$release" \
+            version="$version" \
+            owner={{ .OWNER }} \
+            repository={{ .REPOSITORY }} \
+            docker buildx bake \
+            --set container.context="./filesystem/$version/$target_arch/" \
+            --set container.platform="linux/$target_arch" \
+            --set container.args.VCS_REF={{ .VCS_REF }} \
+            --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --set container.args.ALPINE_VERSION=$release \
+            --set container.args.VERSION=$version \
+            --push
+          done
+        done
+    vars:
+      VCS_REF: $(git rev-parse --short HEAD)
+      BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      WORKINGDIR: $(PWD)
+
+  build-and-push-gha:
+    desc: Build container images using the downloaded minirootfs tar balls
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
+          for arch in "${architectures[@]}"
+          do
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+            fi
+
+            arch="$target_arch" \
             # workingdir={{ .WORKINGDIR }} \
             release="$release" \
             version="$version" \
@@ -212,7 +331,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      # WORKINGDIR: $(PWD)
+      WORKINGDIR: $(GITHUB_WORKSPACE)
 
   create-manifest:
     desc: Create the multi-arch manifest

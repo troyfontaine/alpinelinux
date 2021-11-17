@@ -28,4 +28,4 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Build Test
-        run: task build-test
+        run: task build-test-gha

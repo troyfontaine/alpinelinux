@@ -32,4 +32,4 @@ jobs:
         uses: docker/setup-buildx-action@v1
 
       - name: Release to Dockerhub
-        run: task build-release
+        run: task build-release-gha
