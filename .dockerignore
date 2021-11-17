@@ -1,0 +1,11 @@
+.DS_Store
+.github
+.git
+.gitignore
+LICENSE
+README.md
+logo.png
+Taskfile.yaml
+test.bats
+lefthook.yaml
+.lefthook

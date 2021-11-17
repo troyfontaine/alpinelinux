@@ -1,4 +1,3 @@
-deps
 .DS_Store
 alpine.tgz
-shadow
+filesystem/*
