@@ -97,12 +97,12 @@ tasks:
             URI_PATH="alpine-minirootfs-${release}-${arch}.tar.gz"
 
             # Grab our root file system
-            wget -q --show-progress -O \
+            wget -q -O \
               "./filesystem/${version}/$target_arch/alpine.tar.gz" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}"
 
             # Grab the signature for the file
-            wget -q --show-progress -O \
+            wget -q -O \
               "./filesystem/${version}/$target_arch/key.asc" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
 
@@ -181,7 +181,7 @@ tasks:
             fi
 
             arch="$target_arch" \
-            # workingdir=$GITHUB_WORKSPACE \
+            workingdir=$GITHUB_WORKSPACE \
             release="$release" \
             version="$version" \
             owner={{ .OWNER }} \
