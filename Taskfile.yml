@@ -106,7 +106,7 @@ tasks:
             fi
 
             arch="$target_arch" \
-            workingdir={{ .WORKINGDIR }} \
+            # workingdir={{ .WORKINGDIR }} \
             release="$release" \
             version="$version" \
             owner={{ .OWNER }} \
@@ -124,7 +124,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $(PWD)
+      #WORKINGDIR: $(PWD)
 
   test-images:
     desc: Run tests against the local images
