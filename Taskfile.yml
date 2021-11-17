@@ -1,3 +1,4 @@
+---
 version: '3'
 
 env:
@@ -11,29 +12,35 @@ tasks:
   build-test:
     desc: Build images to test locally
     cmds:
+      - task: get-signingkey
       - task: get-rootfs
       - task: build-local
       - task: test-images
       - task: cleanup
-  
+
   build-release:
     desc: Build images to push to Dockerhub and create multi-arch manifest
     cmds:
+      - task: get-signingkey
       - task: get-rootfs
       - task: build-and-push
       - task: create-release
       - task: cleanup
-  
+
+  get-signingkey:
+    desc: Get the Alpine signing key
+    cmds:
+      - curl https://alpinelinux.org/keys/ncopa.asc | gpg --import -
+
   get-rootfs:
-    desc: Download the minirootfs file system for the various platforms to be used in building docker container images.
+    desc: Download the minirootfs file system \
+      for the various platforms to be used in \
+      building docker container images.
     cmds:
       - |
         set -e
         releases={{ .RELEASES }}
         architectures={{ .ARCHITECTURES }}
-
-        # Import Signing Key
-        curl https://alpinelinux.org/keys/ncopa.asc | gpg --import -
 
         for release in "${releases[@]}"
         do
@@ -54,22 +61,27 @@ tasks:
 
             mkdir -p "$version/$target_arch"
 
+            URI_PATH="alpine-minirootfs-${release}-${arch}.tar.gz"
+
             # Grab our root file system
-            wget -O "${version}/$target_arch/alpine.tar.gz" \
-              "{{ .CDN }}/v${version}/releases/${arch}/alpine-minirootfs-${release}-${arch}.tar.gz"
+            wget -O \
+              "${version}/$target_arch/alpine.tar.gz" \
+              "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}"
 
             # Grab the signature for the file
-            wget -O "${version}/$target_arch/key.asc" \
-              "{{ .CDN }}/v${version}/releases/${arch}/alpine-minirootfs-${release}-${arch}.tar.gz.asc"
-            
+            wget -O \
+              "${version}/$target_arch/key.asc" \
+              "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
+
             # Validate the downloaded root file system
-            if ! gpg --verify "${version}/$target_arch/key.asc" "${version}/$target_arch/alpine.tar.gz"; then
+            if ! gpg --verify "${version}/$target_arch/key.asc"\
+              "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
               exit 1
             fi
           done
           popd > /dev/null || return
         done
-  
+
   build-local:
     desc: Build container images using the downloaded minirootfs tar balls
     cmds:
@@ -103,6 +115,8 @@ tasks:
             --set container.platform="linux/$target_arch" \
             --set container.args.VCS_REF={{ .VCS_REF }} \
             --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --set container.args.ALPINE_VERSION=$release \
+            --set container.args.VERSION=$version \
             --load
           done
         done
@@ -149,7 +163,9 @@ tasks:
               RELEASE=$release \
               bats test.bats
 
-            docker image rm {{ .OWNER }}/{{ .REPOSITORY }}:test-candidate >/dev/null 2>&1
+            docker image rm \
+            {{ .OWNER }}/{{ .REPOSITORY }}:test-candidate \
+            >/dev/null 2>&1
 
           done
         done
@@ -187,6 +203,8 @@ tasks:
             --set container.platform="linux/$target_arch" \
             --set container.args.VCS_REF={{ .VCS_REF }} \
             --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --set container.args.ALPINE_VERSION=$release \
+            --set container.args.VERSION=$version \
             --push
           done
         done

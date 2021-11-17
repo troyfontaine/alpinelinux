@@ -40,5 +40,6 @@ target "container" {
         ALPINE_VERSION = ""
         VCS_REF = ""
         BUILD_DATE = ""
+        VERSION = ""
     }
 }
