@@ -1,0 +1,226 @@
+version: '3'
+
+env:
+  RELEASES: ( "3.9.6" "3.10.9" "3.11.13" "3.12.9" "3.13.7" "3.14.3")
+  ARCHITECTURES: ( "x86_64" "aarch64" "armhf" )
+  OWNER: "troyfontaine"
+  REPOSITORY: "alpinelinux"
+  CDN: "https://dl-cdn.alpinelinux.org/alpine"
+
+tasks:
+  build-test:
+    desc: Build images to test locally
+    cmds:
+      - task: get-rootfs
+      - task: build-local
+      - task: test-images
+      - task: cleanup
+  
+  build-release:
+    desc: Build images to push to Dockerhub and create multi-arch manifest
+    cmds:
+      - task: get-rootfs
+      - task: build-and-push
+      - task: create-release
+      - task: cleanup
+  
+  get-rootfs:
+    desc: Download the minirootfs file system for the various platforms to be used in building docker container images.
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        # Import Signing Key
+        curl https://alpinelinux.org/keys/ncopa.asc | gpg --import -
+
+        for release in "${releases[@]}"
+        do
+          pushd ./filesystem/ > /dev/null || return
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
+          mkdir -p "$version"
+
+          for arch in "${architectures[@]}"
+          do
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+            fi
+
+            mkdir -p "$version/$target_arch"
+
+            # Grab our root file system
+            wget -O "${version}/$target_arch/alpine.tar.gz" \
+              "{{ .CDN }}/v${version}/releases/${arch}/alpine-minirootfs-${release}-${arch}.tar.gz"
+
+            # Grab the signature for the file
+            wget -O "${version}/$target_arch/key.asc" \
+              "{{ .CDN }}/v${version}/releases/${arch}/alpine-minirootfs-${release}-${arch}.tar.gz.asc"
+            
+            # Validate the downloaded root file system
+            if ! gpg --verify "${version}/$target_arch/key.asc" "${version}/$target_arch/alpine.tar.gz"; then
+              exit 1
+            fi
+          done
+          popd > /dev/null || return
+        done
+  
+  build-local:
+    desc: Build container images using the downloaded minirootfs tar balls
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
+          for arch in "${architectures[@]}"
+          do
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+            fi
+
+            arch="$target_arch" \
+            workingdir={{ .WORKINGDIR }} \
+            release="$release" \
+            version="$version" \
+            owner={{ .OWNER }} \
+            repository={{ .REPOSITORY }} \
+            docker buildx bake \
+            --set container.context="./filesystem/$version/$target_arch/" \
+            --set container.platform="linux/$target_arch" \
+            --set container.args.VCS_REF={{ .VCS_REF }} \
+            --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --load
+          done
+        done
+    vars:
+      VCS_REF: $(git rev-parse --short HEAD)
+      BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      WORKINGDIR: $(PWD)
+
+  test-images:
+    desc: Run tests against the local images
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+          for arch in "${architectures[@]}"
+          do
+
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+              alpine_arch="x86_64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+              alpine_arch="aarch64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+              alpine_arch="armv7l"
+            fi
+
+            docker tag \
+            {{ .OWNER }}/{{ .REPOSITORY }}:$target_arch-$version \
+            {{ .OWNER }}/{{ .REPOSITORY }}:test-candidate
+
+            TARGET_ARCH=$target_arch \
+              ARCH=$arch \
+              ALPINE_ARCH=$alpine \
+              VERSION=$version \
+              OWNER={{ .OWNER }} \
+              REPOSITORY={{ .REPOSITORY }} \
+              RELEASE=$release \
+              bats test.bats
+
+            docker image rm {{ .OWNER }}/{{ .REPOSITORY }}:test-candidate >/dev/null 2>&1
+
+          done
+        done
+
+  build-and-push:
+    desc: Build container images using the downloaded minirootfs tar balls
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
+          for arch in "${architectures[@]}"
+          do
+            if [ "$arch" == "x86_64" ]; then
+              target_arch="amd64"
+            elif [ "$arch" == "aarch64" ]; then
+              target_arch="arm64"
+            elif [ "$arch" == "armhf" ]; then
+              target_arch="$arch"
+            fi
+
+            arch="$target_arch" \
+            workingdir={{ .WORKINGDIR }} \
+            release="$release" \
+            version="$version" \
+            owner={{ .OWNER }} \
+            repository={{ .REPOSITORY }} \
+            docker buildx bake \
+            --set container.context="./filesystem/$version/$target_arch/" \
+            --set container.platform="linux/$target_arch" \
+            --set container.args.VCS_REF={{ .VCS_REF }} \
+            --set container.args.BUILD_DATE={{ .BUILD_DATE }} \
+            --push
+          done
+        done
+    vars:
+      VCS_REF: $(git rev-parse --short HEAD)
+      BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
+      WORKINGDIR: $(PWD)
+
+  create-manifest:
+    desc: Create the multi-arch manifest
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+        architectures={{ .ARCHITECTURES }}
+
+        for release in "${releases[@]}"
+        do
+          docker buildx imagetools create \
+            -t "{{ .OWNER }}/{{ .REPOSITORY }}:${release}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:amd64-${release}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:arm64-${release}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:armhf-${release}"
+        done
+
+  cleanup:
+    desc: Clean-up downloaded tar balls
+    cmds:
+      - |
+        set -e
+        releases={{ .RELEASES }}
+
+        for release in "${releases[@]}"
+        do
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+          rm -rf "./filesystem/$version"
+        done

@@ -1,0 +1,16 @@
+---
+pre-commit:
+  parallel: true
+  commands:
+    yaml-lint:
+      files: git diff --name-only @{push}
+      glob: "*.{yml,yaml}"
+      run: |
+        docker run --rm --name swiss_linter \
+        -v "${PWD}:/tmp/lint" \
+        troyfontaine/swiss_linter yamllint {files}
+    dockerfile-lint:
+      glob: "Dockerfile"
+      run: |
+        docker run --rm -i \
+        hadolint/hadolint < {staged_files}
