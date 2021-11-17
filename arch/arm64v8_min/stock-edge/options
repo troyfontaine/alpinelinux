@@ -1,4 +1,0 @@
-export RELEASE="edge"
-export DOWNLOAD='http://dl-cdn.alpinelinux.org/alpine/edge/releases/aarch64/alpine-minirootfs-3.9.0-aarch64.tar.gz'
-export TAGS=(troyfontaine/arm64v8_min-alpinelinux:edge)
-export PUSH_IMAGE="false"
