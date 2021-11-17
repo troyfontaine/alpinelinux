@@ -44,7 +44,7 @@ tasks:
 
         for release in "${releases[@]}"
         do
-          pushd ./filesystem/ > /dev/null || return
+          pushd ./filesystem/ > /dev/null
           version=$(echo "$release" | cut -f1,2 -d'.' )
 
           mkdir -p "$version"
@@ -74,12 +74,12 @@ tasks:
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
 
             # Validate the downloaded root file system
-            # if ! gpg --verify "${version}/$target_arch/key.asc"\
-            #   "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
-            #   exit 1
-            # fi
+            if ! gpg --verify "${version}/$target_arch/key.asc"\
+              "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
+              exit 1
+            fi
           done
-          popd > /dev/null || return
+          popd > /dev/null
         done
 
   build-local:
