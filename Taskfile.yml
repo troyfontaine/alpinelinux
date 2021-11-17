@@ -44,10 +44,11 @@ tasks:
 
         for release in "${releases[@]}"
         do
-          pushd ./filesystem/ > /dev/null
           version=$(echo "$release" | cut -f1,2 -d'.' )
 
-          mkdir -p "$version"
+          mkdir -p "./filesystem/$version"
+
+          ls -lah
 
           for arch in "${architectures[@]}"
           do
@@ -59,27 +60,27 @@ tasks:
               target_arch="$arch"
             fi
 
-            mkdir -p "$version/$target_arch"
+            mkdir -p "./filesystem/$version/$target_arch"
 
             URI_PATH="alpine-minirootfs-${release}-${arch}.tar.gz"
 
             # Grab our root file system
             wget -O \
-              "${version}/$target_arch/alpine.tar.gz" \
+              "./filesystem/${version}/$target_arch/alpine.tar.gz" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}"
 
             # Grab the signature for the file
             wget -O \
-              "${version}/$target_arch/key.asc" \
+              "./filesystem/${version}/$target_arch/key.asc" \
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
 
             # Validate the downloaded root file system
-            if ! gpg --verify "${version}/$target_arch/key.asc"\
-              "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
+            if ! gpg --verify "./filesystem/${version}/$target_arch/key.asc"\
+              "./filesystem/${version}/$target_arch/alpine.tar.gz"; then
+              echo "GPG Verification Failed!  Exiting"
               exit 1
             fi
           done
-          popd > /dev/null
         done
 
   build-local:
