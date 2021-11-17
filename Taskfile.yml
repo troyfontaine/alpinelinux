@@ -74,10 +74,10 @@ tasks:
               "{{ .CDN }}/v${version}/releases/${arch}/${URI_PATH}.asc"
 
             # Validate the downloaded root file system
-            if ! gpg --verify "${version}/$target_arch/key.asc"\
-              "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
-              exit 1
-            fi
+            # if ! gpg --verify "${version}/$target_arch/key.asc"\
+            #   "${version}/$target_arch/alpine.tar.gz" >/dev/null; then
+            #   exit 1
+            # fi
           done
           popd > /dev/null || return
         done
