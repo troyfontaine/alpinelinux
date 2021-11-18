@@ -335,10 +335,13 @@ tasks:
         set -e
         releases={{ .RELEASES }}
 
-        version=$(echo "$release" | cut -f1,2 -d'.' )
+        
 
         for release in "${releases[@]}"
         do
+
+          version=$(echo "$release" | cut -f1,2 -d'.' )
+
           docker buildx imagetools create \
             -t "{{ .OWNER }}/{{ .REPOSITORY }}:${release}" \
             "{{ .OWNER }}/{{ .REPOSITORY }}:amd64-${release}" \
