@@ -34,7 +34,7 @@ tasks:
       - task: get-signingkey
       - task: get-rootfs
       - task: build-and-push
-      - task: create-release
+      - task: create-manifest
       - task: cleanup
 
   build-release-gha:
@@ -43,7 +43,7 @@ tasks:
       - task: get-signingkey
       - task: get-rootfs
       - task: build-and-push-gha
-      - task: create-release
+      - task: create-manifest
 
   create-buildx-builder:
     desc: Setup
