@@ -1,6 +1,6 @@
 # Multi-Architecture Alpine Linux (Containerized)
 
-[![](https://img.shields.io/github/workflow/status/troyfontaine/alpinelinux/merge-request?style=plastic)]
+[![Build-and-Release](https://github.com/troyfontaine/alpinelinux/actions/workflows/merge-request.yml/badge.svg)](https://github.com/troyfontaine/alpinelinux/actions/workflows/merge-request.yml)
 [![](https://img.shields.io/docker/pulls/troyfontaine/alpinelinux?style=plastic)]
 [![](https://img.shields.io/docker/stars/troyfontaine/alpinelinux?style=plastic)]
 [![](https://img.shields.io/github/license/troyfontaine/alpinelinux?style=plastic)]
