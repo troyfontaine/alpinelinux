@@ -1,7 +1,7 @@
 #!/usr/bin/env bats
 
-load '/usr/local/lib/bats-support/load.bash'
-load '/usr/local/lib/bats-assert/load.bash'
+load './test/test_helper/bats-assert/load.bash'
+load './test/test_helper/bats-support/load.bash'
 
 @test "${TARGET_ARCH} ${VERSION} version is correct" {
   run docker container run --rm --platform linux/${TARGET_ARCH} troyfontaine/alpinelinux:test-candidate cat /etc/os-release

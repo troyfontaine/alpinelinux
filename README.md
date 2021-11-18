@@ -1,11 +1,9 @@
 # Multi-Architecture Alpine Linux (Containerized)
 
-Current Build Status: [![CircleCI](https://circleci.com/gh/troyfontaine/alpinelinux.svg?style=shield)](https://circleci.com/gh/troyfontaine/alpinelinux)  
- 
-[![](https://images.microbadger.com/badges/image/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/troyfontaine/alpinelinux.svg)](https://microbadger.com/images/troyfontaine/alpinelinux "Get your own version badge on microbadger.com")
-[![Docker Stars](https://img.shields.io/docker/stars/troyfontaine/alpinelinux.svg)]()
-[![Docker Pulls](https://img.shields.io/docker/pulls/troyfontaine/alpinelinux.svg)]()
+[![](https://img.shields.io/github/workflow/status/troyfontaine/alpinelinux/merge-request?style=plastic)]
+[![](https://img.shields.io/docker/pulls/troyfontaine/alpinelinux?style=plastic)]
+[![](https://img.shields.io/docker/stars/troyfontaine/alpinelinux?style=plastic)]
+[![](https://img.shields.io/github/license/troyfontaine/alpinelinux?style=plastic)]
 
 This is a multi-architecture container image for amd64, arm64 and armhf (for now) which is created using the Docker [buildx bake](https://docs.docker.com/engine/reference/commandline/buildx_bake/) and [buildx imagetools create](https://docs.docker.com/engine/reference/commandline/buildx_imagetools_create/)functionality.  Images are built using a Go-Task Taskfile that helps build a multi-stage Dockerfile.
 
@@ -18,6 +16,7 @@ With some refactoring to make the build process more efficient and try to simpli
 - [Go Task](https://github.com/go-task/task)
 - [GitHub Actions](https://docs.github.com/en/actions)
 - [Docker Buildx](https://docs.docker.com/buildx/working-with-buildx/)
+- [bats-core](https://github.com/bats-core/bats-core)
 
 ## Builds
 

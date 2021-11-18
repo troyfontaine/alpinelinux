@@ -62,7 +62,7 @@ tasks:
   get-signingkey:
     desc: Get the Alpine signing key
     cmds:
-      - curl https://alpinelinux.org/keys/ncopa.asc | gpg --import -
+      - curl -s https://alpinelinux.org/keys/ncopa.asc | gpg --import -
 
   get-rootfs:
     desc: Download the minirootfs file system \
@@ -79,8 +79,6 @@ tasks:
           version=$(echo "$release" | cut -f1,2 -d'.' )
 
           mkdir -p "./filesystem/$version"
-
-          ls -lah
 
           for arch in "${architectures[@]}"
           do
@@ -156,7 +154,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $(PWD)
+      WORKINGDIR: $(echo $PWD)
 
   build-gha:
     desc: Build container images using the downloaded minirootfs tar balls
@@ -236,7 +234,7 @@ tasks:
               OWNER={{ .OWNER }} \
               REPOSITORY={{ .REPOSITORY }} \
               RELEASE=$release \
-              bats test.bats
+              ./test/bats/bin/bats test.bats
 
             docker image rm \
             {{ .OWNER }}/{{ .REPOSITORY }}:test-candidate \
@@ -286,7 +284,7 @@ tasks:
     vars:
       VCS_REF: $(git rev-parse --short HEAD)
       BUILD_DATE: $(date -u +"%Y-%m-%dT%H:%M:%SZ")
-      WORKINGDIR: $(PWD)
+      WORKINGDIR: $(echo $PWD)
 
   build-and-push-gha:
     desc: Build container images using the downloaded minirootfs tar balls
