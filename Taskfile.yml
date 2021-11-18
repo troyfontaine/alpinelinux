@@ -334,7 +334,8 @@ tasks:
       - |
         set -e
         releases={{ .RELEASES }}
-        architectures={{ .ARCHITECTURES }}
+
+        version=$(echo "$release" | cut -f1,2 -d'.' )
 
         for release in "${releases[@]}"
         do
@@ -343,6 +344,12 @@ tasks:
             "{{ .OWNER }}/{{ .REPOSITORY }}:amd64-${release}" \
             "{{ .OWNER }}/{{ .REPOSITORY }}:arm64-${release}" \
             "{{ .OWNER }}/{{ .REPOSITORY }}:armhf-${release}"
+
+          docker buildx imagetools create \
+            -t "{{ .OWNER }}/{{ .REPOSITORY }}:${version}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:amd64-${version}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:arm64-${version}" \
+            "{{ .OWNER }}/{{ .REPOSITORY }}:armhf-${version}"
         done
 
   cleanup:
